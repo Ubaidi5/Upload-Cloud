@@ -1,0 +1,54 @@
+.ellipsis {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.round-wrap {
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* ---------------------------------------------------------------------- */
+/*                               Font Size                                */
+/* ---------------------------------------------------------------------- */
+.fs-10 { font-size: 10px; }
+.fs-11 { font-size: 11px; }
+.fs-12 { font-size: 12px; }
+.fs-13 { font-size: 13px; }
+.fs-14 { font-size: 14px; }
+.fs-16 { font-size: 16px; }
+.fs-18 { font-size: 18px; }
+.fs-20 { font-size: 20px; }
+.fs-22 { font-size: 22px; }
+.fs-24 { font-size: 24px; }
+
+/* ---------------------------------------------------------------------- */
+/*                               Text Color                               */
+/* ---------------------------------------------------------------------- */
+.fc-dark { color: #202223; }
+.fc-dimm { color: #6A7383; }
+.fc-light { color: #6338FA; }
+.fc-danger { color: #BB401A }
+.fc-white { color: #fff; }
+
+/* ---------------------------------------------------------------------- */
+/*                               Text Color                               */
+/* ---------------------------------------------------------------------- */
+.fw-300 { font-weight: 300; }
+.fw-400 { font-weight: 400; }
+.fw-500 { font-weight: 500; }
+.fw-600 { font-weight: 600; }
+.fw-700 { font-weight: 700; }
+.fw-800 { font-weight: 800; }
+
+/* ---------------------------------------------------------------------- */
+/*                           Background Color                             */
+/* ---------------------------------------------------------------------- */
+.bg-dark { background-color: #202223; }
+.bg-dimm { background-color: #6A7383; }
+.bg-light { background-color: #6338FA; }
+.bg-danger { background-color: #BB401A }
+.bg-white { background-color: #fff; }
