@@ -1,14 +1,15 @@
 interface Props {
-  width: number;
-  color: string;
+  width?: number;
+  color?: string;
   stroke?: number;
+  className?: string;
 }
 
 const Spinner: React.FC<Props> = (props) => {
-  const { width = 24, color, stroke } = props;
+  const { className, width = 24, color = "#6338FA", stroke } = props;
 
   return (
-    <div className="lds-ring">
+    <div className={`lds-ring ${className}`}>
       <div></div>
       <div></div>
       <div></div>
