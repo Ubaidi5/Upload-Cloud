@@ -1,11 +1,9 @@
-import React from "react";
-
 interface Props {
-  size: number;
+  size?: number;
 }
 
 const DonutPlot: React.FC<Props> = (props) => {
-  const { size } = props;
+  const { size = 200 } = props;
   let used = 2800,
     total = 4000;
 
