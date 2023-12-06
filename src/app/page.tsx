@@ -1,5 +1,8 @@
-import { Button } from "@/custom";
+"use client";
+
+import { Button, Switch } from "@/custom";
 import DonutPlot from "@/custom/DonutPlot";
+import Table from "@/custom/Table";
 
 export default function Home() {
   return (
@@ -24,7 +27,7 @@ export default function Home() {
           </div>
         </section>
 
-        <section className="w-[420px] p-5 rounded-xl flex justify-between gap-4 bg-dark">
+        <section className="w-[42 0px] p-5 rounded-xl flex justify-between gap-4 bg-dark">
           <div className="flex flex-col">
             <h1 className="fs-16 fw-600 fc-white mb-3">Plan Summary</h1>
             <p className="fc-dimm fs-13 mb-2">Tier 2</p>
@@ -42,6 +45,48 @@ export default function Home() {
           </div>
         </section>
       </div>
+
+      <br />
+
+      <Table
+        data={[1, 2, 3]}
+        columns={[
+          {
+            title: "Field name",
+            data: <p>Valentine</p>,
+          },
+          {
+            title: "Uploads",
+            data: <p>34</p>,
+          },
+          {
+            title: "Targetting",
+            data: (c) => <p>All products</p>,
+          },
+          {
+            title: "Action",
+            data: () => (
+              <div className="flex gap-4">
+                <div className="flex items-center gap-2">
+                  <Switch />
+                  <span>Active</span>
+                </div>
+
+                <div className="rounded p-2 fc-dark" style={{ border: "1px solid #1e1e2c" }}>
+                  Edit
+                </div>
+                <div className="rounded p-2 fc-dark" style={{ border: "1px solid #1e1e2c" }}>
+                  Delete
+                </div>
+                <div className="rounded p-2 fc-dark" style={{ border: "1px solid #1e1e2c" }}>
+                  Duplicate
+                </div>
+              </div>
+            ),
+            width: 400,
+          },
+        ]}
+      />
     </div>
   );
 }

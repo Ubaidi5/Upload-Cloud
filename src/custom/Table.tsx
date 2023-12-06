@@ -43,7 +43,7 @@ const Table: React.FC<Props> = (props) => {
   return (
     <>
       <StyledTable>
-        <div className="top-bar">
+        {/* <div className="top-bar">
           <Select
             options={[
               { label: "All", value: "all" },
@@ -62,17 +62,17 @@ const Table: React.FC<Props> = (props) => {
               setStatus(val);
             }}
           />
-        </div>
+        </div> */}
         <div className="my-table">
-          <div className="table-row table-head" style={{ display: "grid", gridTemplateColumns }}>
+          <div className="table-head" style={{ display: "grid", gridTemplateColumns }}>
             {header.map((title, index) => (
-              <div key={index} className="text-[#6D7175] fs-12 font-500">
+              <div key={index} className="text-[#6D7175] fs-14 font-500">
                 {title}
               </div>
             ))}
           </div>
 
-          <div className="table-body" style={{ position: "relative", minHeight: 200 }}>
+          <div className="table-body" style={{ position: "relative", minHeight: 180 }}>
             {loading ? (
               <div
                 className="flex items-center flex-col justify-center"
@@ -123,11 +123,11 @@ const Table: React.FC<Props> = (props) => {
           className="flex flex-1 items-center justify-center"
           style={{ borderRight: "1px solid #e1e1e2" }}
         >
-          <ChevronIcon style={{ color: "#5C5F62", width: 10 }} />
+          <ChevronIcon style={{ color: "#5C5F62", width: 10, rotate: "-90deg" }} />
         </span>
 
         <span role="button" className="flex flex-1 items-center justify-center">
-          <ChevronIcon style={{ color: "#5C5F62", width: 10, rotate: "180deg" }} />
+          <ChevronIcon style={{ color: "#5C5F62", width: 10, rotate: "90deg" }} />
         </span>
       </div>
       {/* <span className="fc-dimm">1/3</span> */}
@@ -148,8 +148,15 @@ const StyledTable = styled("div")`
     padding: 8px 12px;
   }
 
+  .table-head {
+    padding: 8px 12px;
+    border-top: 1px solid #e1e3e5;
+    background-color: #1e1e2c;
+    color: #fff;
+  }
+
   .table-row {
-    padding: 8.5px 12px;
+    padding: 8px 12px;
     border-top: 1px solid #e1e3e5;
   }
 
