@@ -5,7 +5,7 @@ interface Props {
 }
 
 const Progress: React.FC<Props> = (props) => {
-  const { percent = 0, strokeColor, className } = props;
+  const { percent = 0, strokeColor = "#6338FA", className } = props;
 
   return (
     <div
