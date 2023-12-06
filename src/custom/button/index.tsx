@@ -79,7 +79,7 @@ const StyledButton = styled("div").withConfig({
   ${({ outlined, color }) =>
     outlined === "true" &&
     css`
-      background-color: #fff;
+      background-color: transparent;
       border: 1px solid ${color || "#8c9196"};
       color: ${color || "#8c9196"};
     `}
