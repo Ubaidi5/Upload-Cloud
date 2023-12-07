@@ -16,8 +16,8 @@ const Signika = Signika_Negative({
 });
 
 export const metadata: Metadata = {
-  title: "Photo Upload",
-  description: "Photo Upload by File Upload",
+  title: "Photo Comet",
+  description: "Upload Image & Customize Order with Comet Base",
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
