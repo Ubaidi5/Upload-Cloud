@@ -22,14 +22,14 @@ const Header: React.FC = () => {
           </div>
         </Link>
 
-        <Link href="/settings-dhl">
-          <div className={`header-item ${pathname === "/settings-dhl" ? "selected" : ""}`}>
+        <Link href="/Uploads">
+          <div className={`header-item ${pathname === "/Uploads" ? "selected" : ""}`}>
             <p className="header-content">Uploads</p>
           </div>
         </Link>
 
-        <Link href="/settings-shipping">
-          <div className={`header-item ${pathname === "/settings-shipping" ? "selected" : ""}`}>
+        <Link href="/plan">
+          <div className={`header-item ${pathname === "/plan" ? "selected" : ""}`}>
             <p className="header-content">Plan</p>
           </div>
         </Link>
