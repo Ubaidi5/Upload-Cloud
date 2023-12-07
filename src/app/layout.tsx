@@ -1,5 +1,6 @@
 import "./globals.css";
 import "./bootstrap.css";
+import "./modal.css";
 import type { Metadata } from "next";
 import StyledComponentsRegistry from "./registry";
 import { Signika_Negative } from "next/font/google";
