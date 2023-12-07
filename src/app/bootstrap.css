@@ -53,3 +53,6 @@
 .bg-light { background-color: #01B6A0; }
 .bg-danger { background-color: #f95f53 }
 .bg-white { background-color: #fff; }
+
+.flex-1 { flex: 1 }
+.justify-center { justify-content: center; }
