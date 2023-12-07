@@ -31,7 +31,7 @@
 /* ---------------------------------------------------------------------- */
 .fc-dark { color: #1E1E2C; }
 .fc-dimm { color: #9F9FA5; }
-.fc-light { color: #01B6A0; }
+.fc-light { color: #6338FA; }
 .fc-danger { color: #f95f53 }
 .fc-white { color: #fff; }
 
@@ -50,7 +50,7 @@
 /* ---------------------------------------------------------------------- */
 .bg-dark { background-color: #1E1E2C; }
 .bg-dimm { background-color: #9F9FA5; }
-.bg-light { background-color: #01B6A0; }
+.bg-light { background-color: #6338FA; }
 .bg-danger { background-color: #f95f53 }
 .bg-white { background-color: #fff; }
 
