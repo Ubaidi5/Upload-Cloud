@@ -24,14 +24,15 @@
 .fs-20 { font-size: 20px; }
 .fs-22 { font-size: 22px; }
 .fs-24 { font-size: 24px; }
+.fs-28 { font-size: 28px; }
 
 /* ---------------------------------------------------------------------- */
 /*                               Text Color                               */
 /* ---------------------------------------------------------------------- */
-.fc-dark { color: #202223; }
-.fc-dimm { color: #6A7383; }
+.fc-dark { color: #1E1E2C; }
+.fc-dimm { color: #9F9FA5; }
 .fc-light { color: #6338FA; }
-.fc-danger { color: #BB401A }
+.fc-danger { color: #f95f53 }
 .fc-white { color: #fff; }
 
 /* ---------------------------------------------------------------------- */
@@ -47,8 +48,11 @@
 /* ---------------------------------------------------------------------- */
 /*                           Background Color                             */
 /* ---------------------------------------------------------------------- */
-.bg-dark { background-color: #202223; }
-.bg-dimm { background-color: #6A7383; }
+.bg-dark { background-color: #1E1E2C; }
+.bg-dimm { background-color: #9F9FA5; }
 .bg-light { background-color: #6338FA; }
-.bg-danger { background-color: #BB401A }
+.bg-danger { background-color: #f95f53 }
 .bg-white { background-color: #fff; }
+
+.flex-1 { flex: 1 }
+.justify-center { justify-content: center; }

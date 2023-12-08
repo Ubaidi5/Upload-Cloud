@@ -1,3 +1,4 @@
+"use client";
 /**
  * Author: Ubaid Hussain
  * Custom Components Version 1.0 (Creation Date: Dec 01 2023)
@@ -42,6 +43,18 @@ export { default as message } from "./message";
  */
 export { default as Modal } from "./Modal";
 /**
+ * Progress
+ */
+export { default as Progress } from "./Progress";
+/**
  * Segment
  */
 export { default as Segment } from "./Segment";
+/**
+ * Skeleton
+ */
+export { default as Skeleton } from "./Skeleton";
+/**
+ * Spinner
+ */
+export { default as Spinner } from "./Spinner";

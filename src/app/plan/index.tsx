@@ -1,33 +1,73 @@
 "use client";
 
 import { useState } from "react";
-import Button from "@/components/button";
 import { useAppData } from "@/context/store";
-import Segment from "@/components/Segment";
 import { getDifferenceInDays } from "@/helper/getDifferenceInDays";
-import Link from "@/components/navigation/Link";
+import { Button, Segment, AppLink } from "@/custom";
 import CheckIcon from "@public/icons/check.svg";
 import ErrorIcon from "@public/icons/error.svg";
 import ArrowIcon from "@public/icons/arrow.svg";
 
 const plans = [
   {
-    id: "basic1",
-    name: "baisc_plan_name",
-    yearly: "0.99",
-    monthly: "1.49",
-    features: ["one_icon_field", "unlimited_icons", "24/7_support"],
+    id: "basic",
+    name: "Basic",
+    yearly: "0",
+    monthly: "0",
+    features: [
+      "50 uploads linked to orders",
+      "Max. 5MB upload file size",
+      "File uploads stored for 10 days",
+      "Limited support",
+    ],
     route: (metaSiteId?: string) => {
       top &&
         (top.window.location.href = `https://manage.wix.com/upgrade/app/${process.env.NEXT_PUBLIC_APP_ID}/plan/00d6a9b1-c8e1-4a29-a574-6290762688d4/payment-cycle?meta-site-id=${metaSiteId}`);
     },
   },
   {
-    id: "premium",
-    name: "premium_plan_name",
-    yearly: "1.99",
-    monthly: "2.99",
-    features: ["multiple_icon_fields", "unlimited_icons", "custom_icons", "24/7_support"],
+    id: "essential",
+    name: "Essential",
+    monthly: "3.99",
+    yearly: "2.99",
+    features: [
+      "Unlimited file uploads",
+      "500 uploads linked",
+      "Max. 20MB upload file size",
+      "10GB archive space",
+    ],
+    route: (metaSiteId?: string) => {
+      top &&
+        (top.window.location.href = `https://manage.wix.com/upgrade/app/${process.env.NEXT_PUBLIC_APP_ID}/plan/51caf23e-220e-43b3-829d-924ad4e4a6dd/payment-cycle?meta-site-id=${metaSiteId}`);
+    },
+  },
+  {
+    id: "pinnacle",
+    name: "Pinnacle",
+    yearly: "5.99",
+    monthly: "7.99",
+    features: [
+      "2,000 uploads linked to orders",
+      "Max. 50MB upload file size",
+      "50GB archive space",
+      "24/7 support",
+    ],
+    route: (metaSiteId?: string) => {
+      top &&
+        (top.window.location.href = `https://manage.wix.com/upgrade/app/${process.env.NEXT_PUBLIC_APP_ID}/plan/51caf23e-220e-43b3-829d-924ad4e4a6dd/payment-cycle?meta-site-id=${metaSiteId}`);
+    },
+  },
+  {
+    id: "infinite",
+    name: "Infinite",
+    yearly: "11.99",
+    monthly: "14.99",
+    features: [
+      "Unlimited uploads linked to orders",
+      "Max. 100MB upload file size",
+      "100GB archive space",
+      "24/7 support",
+    ],
     route: (metaSiteId?: string) => {
       top &&
         (top.window.location.href = `https://manage.wix.com/upgrade/app/${process.env.NEXT_PUBLIC_APP_ID}/plan/51caf23e-220e-43b3-829d-924ad4e4a6dd/payment-cycle?meta-site-id=${metaSiteId}`);
@@ -68,23 +108,23 @@ const PlanPage: React.FC = () => {
           </div>
         </section>
       ) : (
-        <Link href="/">
-          <div className="mb-2 flex items-center gap-8">
+        <AppLink href="/">
+          <div className="mb-2 flex items-center gap-3">
             <span
-              style={{ width: 36, height: 36, borderRadius: 4, border: "1px solid #dcdcdc" }}
-              className="flex items-center jc-center"
+              style={{ width: 28, height: 28, borderRadius: 4, border: "1px solid #dcdcdc" }}
+              className="flex items-center justify-center"
             >
-              <ArrowIcon style={{ width: 16, rotate: "-90deg", color: "#797979" }} />
+              <ArrowIcon style={{ width: 12, rotate: "-90deg", color: "#797979" }} />
             </span>
             <p className="m-0">Back</p>
           </div>
-        </Link>
+        </AppLink>
       )}
 
-      <div className="card p-5">
+      <div className="card p-5 bg-white">
         <div className="text-center">
-          <h2 className="fc-light fw-700">Please select your paid plan</h2>
-          <p className="fc-dimm">Choose a plan that suits you best</p>
+          <h2 className="fc-dark fs-28 fw-700">Upgrade Your App Today</h2>
+          <p className="mt-3 fc-dark">Choose a plan that suits you best</p>
         </div>
 
         <Segment
@@ -97,19 +137,16 @@ const PlanPage: React.FC = () => {
           ]}
         />
 
-        <div className="flex jc-center gap-24 mt-5">
+        <div className="flex justify-center mt-5 bg-white" style={{ border: "1px solid #dcdcdc" }}>
           {plans.map((plan, index) => {
-            const [w, d] = plan[segment as "yearly" | "monthly"].split(".");
+            const [w, d] = plan[segment as "yearly" | "monthly"].split("."); // whole | decimal
             return (
-              <div key={index}>
+              <div key={index} style={{ flex: 1 }}>
                 <div
-                  className="card p-3"
                   style={{
-                    width: 300,
-                    height: 300,
                     position: "relative",
                     boxShadow: "box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.025)",
-                    border: "1px solid #dcdcdc",
+                    borderRight: index === 3 ? "none" : "1px solid #dcdcdc",
                   }}
                 >
                   {plan.id === current_plan ? (
@@ -128,31 +165,40 @@ const PlanPage: React.FC = () => {
                   ) : null}
 
                   <section style={{ zIndex: "10" }}>
-                    <h3>{plan.name}</h3>
+                    <h3 className="text-center fs-24 pt-3">{plan.name}</h3>
 
-                    <p className="my-3">
-                      <span>US$ </span>
-                      <span className="fw-500">{w}.</span>
-                      <sup className="fw-500">{d}</sup>
-                      <sub>/{segment}</sub>
-                    </p>
-
-                    {plan.features.map((item, index) => (
-                      <p key={index} className="flex items-center gap-8 mb-1">
-                        <CheckIcon style={{ width: 16, color: "#2e2e34" }} />
-                        <span className="fs-14">{item}</span>
-                      </p>
-                    ))}
+                    {plan.id === "basic" ? (
+                      <div className="text-center fs-24 mt-4 fw-500">Free</div>
+                    ) : (
+                      <div className="my-3 fs-24 flex justify-center">
+                        <p>$</p>
+                        <span className="fw-500">{w}</span>
+                        <div>
+                          <p>{d}</p>
+                          <p>/{segment}</p>
+                        </div>
+                      </div>
+                    )}
 
                     <Button
-                      className="mt-3"
-                      style={{ position: "absolute", bottom: 20, left: 20, right: 20 }}
+                      className="mt-5 mb-3 mx-auto px-5"
                       onClick={() => {
                         plan.route(appData.site.siteId);
                       }}
+                      style={{ width: "max-content" }}
                     >
                       Upgrade
                     </Button>
+
+                    {plan.features.map((item, index) => (
+                      <p
+                        key={index}
+                        className="py-2 text-center"
+                        style={{ borderTop: "1px solid #dcdcdc" }}
+                      >
+                        {item}
+                      </p>
+                    ))}
                   </section>
                 </div>
               </div>

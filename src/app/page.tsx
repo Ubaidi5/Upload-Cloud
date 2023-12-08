@@ -1,113 +1,162 @@
-import Image from 'next/image'
+"use client";
+
+import DeleteFieldModal from "@/components/Modal/DeleteFieldModal";
+import { Button, Modal, Switch } from "@/custom";
+import DonutPlot from "@/custom/DonutPlot";
+import Table from "@/custom/Table";
+import { MutableRefObject, useRef, useState } from "react";
 
 export default function Home() {
+  const [delteModal, toggleDeleteModal] = useState(false);
+  const uploadField = useRef() as MutableRefObject<any>; // Add field type here
   return (
-    <main className="flex min-h-screen flex-col items-center justify-between p-24">
-      <div className="z-10 max-w-5xl w-full items-center justify-between font-mono text-sm lg:flex">
-        <p className="fixed left-0 top-0 flex w-full justify-center border-b border-gray-300 bg-gradient-to-b from-zinc-200 pb-6 pt-8 backdrop-blur-2xl dark:border-neutral-800 dark:bg-zinc-800/30 dark:from-inherit lg:static lg:w-auto  lg:rounded-xl lg:border lg:bg-gray-200 lg:p-4 lg:dark:bg-zinc-800/30">
-          Get started by editing&nbsp;
-          <code className="font-mono font-bold">src/app/page.tsx</code>
-        </p>
-        <div className="fixed bottom-0 left-0 flex h-48 w-full items-end justify-center bg-gradient-to-t from-white via-white dark:from-black dark:via-black lg:static lg:h-auto lg:w-auto lg:bg-none">
-          <a
-            className="pointer-events-none flex place-items-center gap-2 p-8 lg:pointer-events-auto lg:p-0"
-            href="https://vercel.com?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            By{' '}
-            <Image
-              src="/vercel.svg"
-              alt="Vercel Logo"
-              className="dark:invert"
-              width={100}
-              height={24}
-              priority
-            />
-          </a>
+    <>
+      <DeleteFieldModal
+        open={delteModal}
+        onCancel={() => toggleDeleteModal(false)}
+        onDelete={() => {}}
+      />
+
+      <div className="py-3">
+        <div className="flex gap-4">
+          <section className="w-[420px] p-5 rounded-xl flex flex-col gap-6 bg-dark">
+            <h1 className="fs-16 fw-600 fc-white mb-3">Status Summary</h1>
+
+            <div className="flex items-center gap-24">
+              <div>
+                <p className="fc-dimm fs-13 mb-2">Uploads used</p>
+                <h3 className="fc-light fs-28 fw-600" style={{ lineHeight: "28px" }}>
+                  587
+                </h3>
+              </div>
+              <div>
+                <p className="fc-dimm fs-13 mb-2">Remaining Uploads</p>
+                <h3 className="fc-light fs-28 fw-600" style={{ lineHeight: "28px" }}>
+                  1413
+                </h3>
+              </div>
+            </div>
+          </section>
+
+          <section className="w-[42 0px] p-5 rounded-xl flex justify-between gap-4 bg-dark">
+            <div className="flex flex-col">
+              <h1 className="fs-16 fw-600 fc-white mb-3">Plan Summary</h1>
+              <p className="fc-dimm fs-13 mb-2">Tier 2</p>
+              <h3 className="fc-light fs-28 fw-600" style={{ lineHeight: "28px" }}>
+                Essential plan
+              </h3>
+              <Button className="mt-auto" outlined="true" color="#9F9FA5">
+                Upgrade
+              </Button>
+            </div>
+
+            <div>
+              <DonutPlot size={120} />
+              <p className="text-center fc-white">Usage</p>
+            </div>
+          </section>
         </div>
-      </div>
 
-      <div className="relative flex place-items-center before:absolute before:h-[300px] before:w-[480px] before:-translate-x-1/2 before:rounded-full before:bg-gradient-radial before:from-white before:to-transparent before:blur-2xl before:content-[''] after:absolute after:-z-20 after:h-[180px] after:w-[240px] after:translate-x-1/3 after:bg-gradient-conic after:from-sky-200 after:via-blue-200 after:blur-2xl after:content-[''] before:dark:bg-gradient-to-br before:dark:from-transparent before:dark:to-blue-700 before:dark:opacity-10 after:dark:from-sky-900 after:dark:via-[#0141ff] after:dark:opacity-40 before:lg:h-[360px] z-[-1]">
-        <Image
-          className="relative dark:drop-shadow-[0_0_0.3rem_#ffffff70] dark:invert"
-          src="/next.svg"
-          alt="Next.js Logo"
-          width={180}
-          height={37}
-          priority
+        <br />
+
+        <div className="flex justify-end mb-4">
+          <Button>Create Upload Field</Button>
+        </div>
+
+        <Table
+          data={[1, 2, 3]}
+          pagination={false}
+          columns={[
+            {
+              title: "Field name",
+              data: <p>Valentine</p>,
+              expandItem: (c) =>
+                c === 2 ? undefined : (
+                  <>
+                    <h1 className="mb-3 mt-2">Selected Products</h1>
+                    <div className="flex items-center flex-wrap gap-2">
+                      {[1, 2, 3, 4, 5, 6, 1, 2, 3, 4, 5, 6].map((item) => (
+                        <span style={{ backgroundColor: "#ececec", padding: 6, borderRadius: 4 }}>
+                          Polca dots Shirt
+                        </span>
+                      ))}
+                    </div>
+                  </>
+                ),
+            },
+            {
+              title: "Uploads",
+              data: <p>34</p>,
+            },
+            {
+              title: "Targetting",
+              data: () => <p>All products</p>,
+            },
+            {
+              title: <p className="text-center">Action</p>,
+              data: (data) => (
+                <div className="flex gap-4" style={{ justifyContent: "end", width: "100%" }}>
+                  <div className="flex items-center gap-2">
+                    <Switch checked size={20} />
+                    <span>Enabled</span>
+                  </div>
+
+                  <div className="action-button edit">Edit</div>
+                  <div
+                    className="action-button delete"
+                    onClick={() => {
+                      uploadField.current = data;
+                      toggleDeleteModal(true);
+                    }}
+                  >
+                    Delete
+                  </div>
+                  <div className="action-button duplicate">Duplicate</div>
+                </div>
+              ),
+              width: 380,
+            },
+          ]}
         />
+
+        <style>
+          {`
+          .action-button {
+            padding: 4px 8px;
+            min-width: 64px;
+            border: 1px solid #1e1e2c;
+            border-radius: 4px;
+            color: #1e1e2c;
+            cursor: pointer;
+            text-align: center;
+            transition: 0.2s;
+          }
+
+          .edit:hover{
+            background-color: #1e1e2c;
+            color: #fff;
+          }
+
+          .delete {
+            border-color: #f95f53;
+            color: #f95f53;
+          }
+          .delete:hover {
+            background-color: #f95f53;
+            color: #fff;
+          }
+
+          .duplicate {
+            border-color: #6338FA;
+            color: #6338FA;
+          }
+          .duplicate:hover {
+            background-color: #6338FA;
+            color: #fff;
+          }
+        `}
+        </style>
       </div>
-
-      <div className="mb-32 grid text-center lg:max-w-5xl lg:w-full lg:mb-0 lg:grid-cols-4 lg:text-left">
-        <a
-          href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className={`mb-3 text-2xl font-semibold`}>
-            Docs{' '}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className={`m-0 max-w-[30ch] text-sm opacity-50`}>
-            Find in-depth information about Next.js features and API.
-          </p>
-        </a>
-
-        <a
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className={`mb-3 text-2xl font-semibold`}>
-            Learn{' '}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className={`m-0 max-w-[30ch] text-sm opacity-50`}>
-            Learn about Next.js in an interactive course with&nbsp;quizzes!
-          </p>
-        </a>
-
-        <a
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className={`mb-3 text-2xl font-semibold`}>
-            Templates{' '}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className={`m-0 max-w-[30ch] text-sm opacity-50`}>
-            Explore the Next.js 13 playground.
-          </p>
-        </a>
-
-        <a
-          href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className={`mb-3 text-2xl font-semibold`}>
-            Deploy{' '}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className={`m-0 max-w-[30ch] text-sm opacity-50`}>
-            Instantly deploy your Next.js site to a shareable URL with Vercel.
-          </p>
-        </a>
-      </div>
-    </main>
-  )
+    </>
+  );
 }

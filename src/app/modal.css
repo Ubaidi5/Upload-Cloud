@@ -1,0 +1,85 @@
+.mask {
+  position: fixed;
+  background-color: rgba(0, 0, 0, 0.5);
+  inset: 0;
+  z-index: 900;
+}
+
+.modal-wrapper {
+  position: absolute;
+  width: max-content;
+  height: max-content;
+  top: 50%;
+  left: 50%;
+  overflow: auto;
+  z-index: 1000;
+  transform: translate(-50%, -50%);
+}
+
+.modal {
+  position: relative;
+  width: 600px;
+  height: max-content;
+  margin: auto;
+  background-color: #fff;
+  box-shadow: 0px 2px 1px rgba(0, 0, 0, 0.05), 0px 0px 1px rgba(0, 0, 0, 0.25);
+  border-radius: 8px;
+}
+.videoModal {
+  position: relative;
+  width: 50vw;
+  margin: auto;
+  border-radius: 8px;
+}
+
+.modal-content {
+  width: 100%;
+  border-radius: 8px;
+}
+
+.saveandclose-button {
+  color: #21ce62;
+  width: 137px;
+  height: 45px;
+  outline: none;
+  border: none;
+  margin-top: 32px;
+  cursor: pointer;
+  background: #ffffff;
+  box-shadow: 0px 1px 0px rgba(0, 0, 0, 0.08), inset 0px -1px 0px rgba(0, 0, 0, 0.2);
+  border-radius: 4px;
+  font-size: 15px;
+}
+
+.close-button {
+  z-index: 100;
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+@media screen and (min-width: 1024px) {
+  .videoModal {
+    position: relative;
+    width: 50vw;
+    margin: auto;
+    border-radius: 8px;
+  }
+}
+@media screen and (max-width: 1024px) {
+  .videoModal {
+    position: relative;
+    width: 90vw;
+    margin: auto;
+    border-radius: 8px;
+  }
+}
+@media screen and (max-width: 576px) {
+  .modal {
+    width: 90vw;
+    margin: auto;
+  }
+}

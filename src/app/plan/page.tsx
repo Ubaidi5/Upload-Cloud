@@ -5,10 +5,10 @@ function Plan() {
     <main>
       <section className="py-3">
         <div className="card p-2 flex items-center gap-8">
-          <img src="/images/fav-icon-light.svg" width={56} height={56} alt="Floating icons" />
+          <img src="/images/fav-icon-light.svg" width={56} height={56} alt="Photo Comet" />
           <div>
-            <p className="fc-light fw-800">Floating Icons</p>
-            <p className="fc-dimm fs-12">Upload with care</p>
+            <h2 className="fc-light fw-800">Photo Comet</h2>
+            <p className="fc-dark fs-13">Upload Image & Customize Order with Comet Base</p>
           </div>
         </div>
       </section>
