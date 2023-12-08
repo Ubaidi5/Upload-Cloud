@@ -22,8 +22,8 @@ const Header: React.FC = () => {
           </div>
         </Link>
 
-        <Link href="/Uploads">
-          <div className={`header-item ${pathname === "/Uploads" ? "selected" : ""}`}>
+        <Link href="/uploads">
+          <div className={`header-item ${pathname === "/uploads" ? "selected" : ""}`}>
             <p className="header-content">Uploads</p>
           </div>
         </Link>
