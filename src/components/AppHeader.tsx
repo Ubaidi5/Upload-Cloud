@@ -12,8 +12,8 @@ const Header: React.FC = () => {
         className="flex items-center px-5 py-[14px] gap-3"
         style={{ borderBottom: "1px solid #E1E3E5" }}
       >
-        <img src="/images/logo.png" width={28} height={28} />
-        <p className="m-0">easyDHL</p>
+        <img src="/images/logo.png" alt="Photo comet" width={28} height={28} />
+        <p className="m-0">Photo Comet</p>
       </div>
       <StyeledHeader>
         <Link href="/">
