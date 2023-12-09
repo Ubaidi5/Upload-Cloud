@@ -3,18 +3,17 @@ import styled from "styled-components";
 import { HexColorPicker } from "react-colorful";
 import useClickOutside from "@/hooks/useClickOutside";
 import CloseFilled from "@public/icons/close-filled.svg";
-import { useDictionary } from "@/context/dictionary";
 
 interface ColorPickerProps {
   color?: string;
   onChange?: (e: string) => void;
   label?: string;
   className?: string;
+  allowClear?: boolean;
 }
 
 const ColorPicker: React.FC<ColorPickerProps> = (props) => {
-  const { color, onChange, label, className } = props;
-  const dictionary = useDictionary();
+  const { color, onChange, label, className, allowClear = false } = props;
 
   const popover = useRef() as MutableRefObject<HTMLDivElement>;
   const [isOpen, toggle] = useState(false);
@@ -50,20 +49,22 @@ const ColorPicker: React.FC<ColorPickerProps> = (props) => {
           />
         </div>
 
-        <div
-          className="flex items-center jc-center fs-13"
-          style={{
-            width: 64,
-            flexShrink: 0,
-            userSelect: "none",
-            color: "#4a5056",
-            backgroundColor: "#faf7f8",
-          }}
-          onClick={() => onChange?.("")}
-          role="button"
-        >
-          {dictionary.clear}
-        </div>
+        {allowClear ? (
+          <div
+            className="flex items-center justify-center fs-13"
+            style={{
+              width: 64,
+              flexShrink: 0,
+              userSelect: "none",
+              color: "#4a5056",
+              backgroundColor: "#faf7f8",
+            }}
+            onClick={() => onChange?.("")}
+            role="button"
+          >
+            Clear
+          </div>
+        ) : null}
       </section>
 
       {isOpen && (
