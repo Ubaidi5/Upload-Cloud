@@ -1,27 +1,29 @@
 import styled from "styled-components";
 
 interface Props {
-  value: number;
-  onChange: (val: number) => void;
+  value: string;
+  onChange: (val: string) => void;
   prefix?: string;
 }
 
 const PixelInput: React.FC<Props> = (props) => {
   const { value, onChange, prefix } = props;
+  const parsedNumber = Number(value);
+
   return (
     <StyledInput className={`flex`}>
-      <span className="btn" onClick={() => value > 0 && onChange(value - 1)}>
+      <span className="btn" onClick={() => parsedNumber > 0 && onChange(`${parsedNumber - 1}`)}>
         -
       </span>
       <input
         min={0}
         type="number"
         className="input"
-        onChange={(e) => onChange(+e.target.value)}
+        onChange={(e) => onChange(e.target.value)}
         value={value}
       />
       {prefix ? <span className="btn prefix">{prefix}</span> : null}
-      <span className="btn" onClick={() => onChange(value + 1)}>
+      <span className="btn" onClick={() => onChange(`${parsedNumber + 1}`)}>
         +
       </span>
     </StyledInput>
