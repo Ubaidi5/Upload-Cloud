@@ -66,8 +66,8 @@ const Select: React.FC<SelectProps> = (props): JSX.Element => {
     <StyledSelect className={className} style={style} type={type} ref={selectRef}>
       {label ? <div className="fs-14 fw-400 mb-1">{label}</div> : null}
 
-      <section className="flex items-center jc-between select-box" tabIndex={1}>
-        <div style={{ color: "#263238cc" }} className="ml-2 fw-500 fs-14">
+      <section className="flex items-center justify-between select-box" tabIndex={1}>
+        <div style={{ color: "#263238cc", marginLeft: 12 }} className="fw-500 fs-14">
           {selection.label == "" ? (
             <span style={{ color: "#bfbfbf" }}>{placeholder}</span>
           ) : (
