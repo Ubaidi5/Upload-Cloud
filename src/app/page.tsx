@@ -1,7 +1,7 @@
 "use client";
 
 import DeleteFieldModal from "@/components/Modal/DeleteFieldModal";
-import { Button, Modal, Switch } from "@/custom";
+import { AppLink, Button, Switch } from "@/custom";
 import DonutPlot from "@/custom/DonutPlot";
 import Table from "@/custom/Table";
 import { MutableRefObject, useRef, useState } from "react";
@@ -60,7 +60,9 @@ export default function Home() {
         <br />
 
         <div className="flex justify-end mb-4">
-          <Button>Create Upload Field</Button>
+          <AppLink href="/create">
+            <Button>Create Upload Field</Button>
+          </AppLink>
         </div>
 
         <Table
