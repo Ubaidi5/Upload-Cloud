@@ -1,5 +1,14 @@
 "use client";
-import { Button, ColorPicker, Input, PixelInput, Select, Switch } from "@/custom";
+import {
+  Button,
+  Checkbox,
+  ColorPicker,
+  Input,
+  PixelInput,
+  RadioGroup,
+  Select,
+  Switch,
+} from "@/custom";
 import { useState } from "react";
 import styled from "styled-components";
 
@@ -27,6 +36,16 @@ const Create: React.FC<Props> = () => {
     buttonHoverColor: "",
     buttonRadius: "4",
     buttonWidth: "max-content",
+  });
+
+  const [behavior, setBehavior] = useState({
+    showPreview: true,
+    numberOfFiles: "single",
+    min: "",
+    max: "",
+    dimension: "",
+    imageWidth: "",
+    imageHeight: "",
   });
 
   return (
@@ -147,7 +166,7 @@ const Create: React.FC<Props> = () => {
                 className="p-5 flex flex-col flex-1 gap-4"
                 style={{ borderRight: "1px solid #dcdcdc" }}
               >
-                <div className="flex justify-between">
+                <div className="flex items-center justify-between">
                   <p>Label size</p>
                   <PixelInput
                     value={appearance.labelSize}
@@ -157,7 +176,7 @@ const Create: React.FC<Props> = () => {
                   />
                 </div>
 
-                <div className="flex justify-between">
+                <div className="flex items-center justify-between">
                   <p>Button text size</p>
                   <PixelInput
                     value={appearance.buttonTextSize}
@@ -167,7 +186,7 @@ const Create: React.FC<Props> = () => {
                   />
                 </div>
 
-                <div className="flex justify-between">
+                <div className="flex items-center justify-between">
                   <p>Help text size</p>
                   <PixelInput
                     value={appearance.helpTextSize}
@@ -177,7 +196,7 @@ const Create: React.FC<Props> = () => {
                   />
                 </div>
 
-                <div className="flex justify-between">
+                <div className="flex items-center justify-between">
                   <p>Button padding horizontal</p>
                   <PixelInput
                     value={appearance.paddingX}
@@ -187,7 +206,7 @@ const Create: React.FC<Props> = () => {
                   />
                 </div>
 
-                <div className="flex justify-between">
+                <div className="flex items-center justify-between">
                   <p>Button padding vertical</p>
                   <PixelInput
                     value={appearance.paddingY}
@@ -197,7 +216,7 @@ const Create: React.FC<Props> = () => {
                   />
                 </div>
 
-                <div className="flex justify-between">
+                <div className="flex items-center justify-between">
                   <p>Button radius</p>
                   <PixelInput
                     value={appearance.buttonRadius}
@@ -209,7 +228,7 @@ const Create: React.FC<Props> = () => {
               </section>
 
               <section className="p-5 flex flex-col flex-1 gap-4">
-                <div className="flex justify-between">
+                <div className="flex items-center justify-between">
                   <p>Label color</p>
                   <ColorPicker
                     color={appearance.labelColor}
@@ -219,7 +238,7 @@ const Create: React.FC<Props> = () => {
                   />
                 </div>
 
-                <div className="flex justify-between">
+                <div className="flex items-center justify-between">
                   <p>Button text color</p>
                   <ColorPicker
                     color={appearance.buttonTextColor}
@@ -229,7 +248,7 @@ const Create: React.FC<Props> = () => {
                   />
                 </div>
 
-                <div className="flex justify-between">
+                <div className="flex items-center justify-between">
                   <p>Help text color</p>
                   <ColorPicker
                     color={appearance.helpTextColor}
@@ -239,7 +258,7 @@ const Create: React.FC<Props> = () => {
                   />
                 </div>
 
-                <div className="flex justify-between">
+                <div className="flex items-center justify-between">
                   <p>Button background</p>
                   <ColorPicker
                     color={appearance.buttonBackgroundColor}
@@ -249,7 +268,7 @@ const Create: React.FC<Props> = () => {
                   />
                 </div>
 
-                <div className="flex justify-between">
+                <div className="flex items-center justify-between">
                   <p>Button hover</p>
                   <ColorPicker
                     color={appearance.buttonHoverColor}
@@ -259,7 +278,7 @@ const Create: React.FC<Props> = () => {
                   />
                 </div>
 
-                <div className="flex justify-between">
+                <div className="flex items-center justify-between">
                   <p>Button width</p>
                   <Select
                     style={{ width: 135 }}
@@ -274,6 +293,109 @@ const Create: React.FC<Props> = () => {
                   />
                 </div>
               </section>
+            </div>
+          </section>
+
+          <section className="card">
+            <h1 style={{ borderBottom: "1px solid #dcdcdc" }} className="p-3">
+              Upload field settings
+            </h1>
+
+            <div className="p-5" style={{ borderBottom: "1px solid #dcdcdc" }}>
+              <Checkbox checked onChange={() => {}}>
+                Show image preview
+              </Checkbox>
+              <p className="fs-13 fc-dimm mt-1">Show thumbnail of uploaded image</p>
+            </div>
+
+            <div className="p-5 flex items-end" style={{ borderBottom: "1px solid #dcdcdc" }}>
+              <section style={{ width: 260 }}>
+                <p className="mt-3 fs-15 fw-500">Allowed number of files</p>
+                <RadioGroup
+                  options={[
+                    { label: "Single file", value: "single" },
+                    { label: "Sepecific quantity", value: "multiple" },
+                  ]}
+                  value={behavior.numberOfFiles}
+                  onChange={(val) => {
+                    setBehavior({ ...behavior, numberOfFiles: val });
+                  }}
+                />
+              </section>
+
+              {behavior.numberOfFiles === "multiple" ? (
+                <section className="flex items-center gap-6 flex-1">
+                  <Input
+                    className="flex-1"
+                    label="Minimum files"
+                    placeholder="1"
+                    min={1}
+                    type="number"
+                    value={behavior.min}
+                    onChange={(e) => {
+                      setBehavior({ ...behavior, min: e.target.value });
+                    }}
+                  />
+
+                  <Input
+                    className="flex-1"
+                    label="Maximum files"
+                    placeholder="5"
+                    min={1}
+                    type="number"
+                    value={behavior.max}
+                    onChange={(e) => {
+                      setBehavior({ ...behavior, max: e.target.value });
+                    }}
+                  />
+                </section>
+              ) : null}
+            </div>
+
+            <div className="p-5 flex items-end">
+              <section style={{ width: 260 }}>
+                <p className="mt-3 fs-15 fw-500">Restrict image dimensions</p>
+                <RadioGroup
+                  options={[
+                    { label: "Any image dimension", value: "" },
+                    { label: "Specific width and height", value: "dimension" },
+                    { label: "Aspect ratio", value: "aspect radio" },
+                  ]}
+                  value={behavior.dimension}
+                  onChange={(val) => {
+                    setBehavior({ ...behavior, dimension: val });
+                  }}
+                />
+              </section>
+
+              {behavior.dimension ? (
+                <section className="flex-1">
+                  <div className="flex items-center gap-6 ">
+                    <Input
+                      className="flex-1"
+                      label="Width"
+                      placeholder="Width"
+                      value={behavior.imageWidth}
+                      onChange={(e) => {
+                        setBehavior({ ...behavior, imageHeight: e.target.value });
+                      }}
+                    />
+
+                    <Input
+                      className="flex-1"
+                      label="Height"
+                      placeholder="Height"
+                      value={behavior.imageHeight}
+                      onChange={(e) => {
+                        setBehavior({ ...behavior, imageHeight: e.target.value });
+                      }}
+                    />
+                  </div>
+                  <p className="fs-13 mt-1">
+                    Add some help text to help the merchant understaing the purpose.
+                  </p>
+                </section>
+              ) : null}
             </div>
           </section>
         </div>
@@ -308,6 +430,7 @@ const Create: React.FC<Props> = () => {
             color: ${appearance.labelColor};
           }
           #field-preview .upload-button {
+            transition: 0.2s ease-out;
             font-size: ${appearance.buttonTextSize}px;
             color: ${appearance.buttonTextColor};
             background-color: ${appearance.buttonBackgroundColor};
@@ -345,6 +468,8 @@ const StyledPage = styled("div")`
     width: 300px;
     height: max-content;
     flex-shrink: 0;
+    position: sticky;
+    top: 24px;
   }
 
   .preview {
