@@ -23,7 +23,7 @@ const Radio: React.FC<RadioProps> = (props) => {
           <RadioIcon className="shrink-0" style={{ color, width: size }} />
         )}
       </span>
-      <span className="flex-1">{children}</span>
+      <span className="flex-1 fs-14 radio-label">{children}</span>
     </div>
   );
 };
