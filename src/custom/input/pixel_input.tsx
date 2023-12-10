@@ -35,7 +35,7 @@ export default PixelInput;
 const StyledInput = styled("div")`
   display: flex;
   border: 1px solid #cfd4d9;
-  height: 28px;
+  height: 31px;
   border-radius: 2px;
   width: max-content;
 
