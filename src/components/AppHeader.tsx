@@ -13,7 +13,7 @@ const Header: React.FC = () => {
         style={{ borderBottom: "1px solid #E1E3E5" }}
       >
         <img src="/images/logo.png" alt="Photo comet" width={28} height={28} />
-        <p className="m-0">Photo Comet</p>
+        <p className="m-0">Upload Cloud</p>
       </div>
       <StyeledHeader>
         <Link href="/">
