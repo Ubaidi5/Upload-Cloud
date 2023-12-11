@@ -75,6 +75,7 @@ const StyledButton = styled("div").withConfig({
   color: ${({ color }) => color || "#fff"};
   height: 36px;
   user-select: none;
+  width: max-content;
 
   ${({ outlined, color }) =>
     outlined === "true" &&

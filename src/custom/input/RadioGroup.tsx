@@ -20,7 +20,7 @@ const RadioGroup: React.FC<RadioGroupProps> = (props) => {
           onChange={() => {
             onChange?.(option.value);
           }}
-          className="mb-3"
+          className="mb-1"
         >
           {option.label}
         </Radio>

@@ -1,7 +1,7 @@
 "use client";
 
 import DeleteFieldModal from "@/components/Modal/DeleteFieldModal";
-import { Button, Modal, Switch } from "@/custom";
+import { AppLink, Button, Switch } from "@/custom";
 import DonutPlot from "@/custom/DonutPlot";
 import Table from "@/custom/Table";
 import { MutableRefObject, useRef, useState } from "react";
@@ -19,30 +19,30 @@ export default function Home() {
 
       <div className="py-3">
         <div className="flex gap-4">
-          <section className="w-[420px] p-5 rounded-xl flex flex-col gap-6 bg-dark">
-            <h1 className="fs-16 fw-600 fc-white mb-3">Status Summary</h1>
+          <section className="w-[420px] p-5 rounded-xl flex flex-col gap-6 card">
+            <h1 className="fs-20 fw-600 fc-dark mb-3">Status Summary</h1>
 
             <div className="flex items-center gap-24">
               <div>
                 <p className="fc-dimm fs-13 mb-2">Uploads used</p>
-                <h3 className="fc-light fs-28 fw-600" style={{ lineHeight: "28px" }}>
+                <h3 className="fs-28 fw-600" style={{ lineHeight: "28px", color: "#01b6a0" }}>
                   587
                 </h3>
               </div>
               <div>
                 <p className="fc-dimm fs-13 mb-2">Remaining Uploads</p>
-                <h3 className="fc-light fs-28 fw-600" style={{ lineHeight: "28px" }}>
+                <h3 className="fs-28 fw-600" style={{ lineHeight: "28px", color: "#01b6a0" }}>
                   1413
                 </h3>
               </div>
             </div>
           </section>
 
-          <section className="w-[42 0px] p-5 rounded-xl flex justify-between gap-4 bg-dark">
+          <section className="w-[42 0px] p-5 rounded-xl flex justify-between gap-12 card">
             <div className="flex flex-col">
-              <h1 className="fs-16 fw-600 fc-white mb-3">Plan Summary</h1>
+              <h1 className="fs-20 fw-600 fc-dark mb-3">Plan Summary</h1>
               <p className="fc-dimm fs-13 mb-2">Tier 2</p>
-              <h3 className="fc-light fs-28 fw-600" style={{ lineHeight: "28px" }}>
+              <h3 className="fs-28 fw-600" style={{ lineHeight: "28px", color: "#01b6a0" }}>
                 Essential plan
               </h3>
               <Button className="mt-auto" outlined="true" color="#9F9FA5">
@@ -60,7 +60,9 @@ export default function Home() {
         <br />
 
         <div className="flex justify-end mb-4">
-          <Button>Create Upload Field</Button>
+          <AppLink href="/create">
+            <Button>Create Upload Field</Button>
+          </AppLink>
         </div>
 
         <Table

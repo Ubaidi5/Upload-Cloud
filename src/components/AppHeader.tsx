@@ -12,8 +12,8 @@ const Header: React.FC = () => {
         className="flex items-center px-5 py-[14px] gap-3"
         style={{ borderBottom: "1px solid #E1E3E5" }}
       >
-        <img src="/images/logo.png" width={28} height={28} />
-        <p className="m-0">easyDHL</p>
+        <img src="/images/logo.png" alt="Photo comet" width={28} height={28} />
+        <p className="m-0">Upload Cloud</p>
       </div>
       <StyeledHeader>
         <Link href="/">
@@ -22,8 +22,8 @@ const Header: React.FC = () => {
           </div>
         </Link>
 
-        <Link href="/Uploads">
-          <div className={`header-item ${pathname === "/Uploads" ? "selected" : ""}`}>
+        <Link href="/uploads">
+          <div className={`header-item ${pathname === "/uploads" ? "selected" : ""}`}>
             <p className="header-content">Uploads</p>
           </div>
         </Link>

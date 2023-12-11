@@ -8,7 +8,7 @@ interface SwitchProps {
 }
 
 const Switch: React.FC<SwitchProps> = (props) => {
-  const { checked, onChange, size = 24, color = "#6338FA" } = props;
+  const { checked, onChange, size = 24, color = "#f29f67" } = props;
   return (
     <StyledSwitch size={size} color={color} onClick={() => onChange?.(!checked)} role="button">
       <span className={`slider ${checked ? "checked" : ""}`}></span>

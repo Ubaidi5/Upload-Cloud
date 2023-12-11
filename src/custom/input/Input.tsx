@@ -16,6 +16,7 @@ interface InputProps {
   className?: string;
   min?: number;
   addonAfter?: string | React.ReactNode;
+  helpText?: string | React.ReactNode;
 }
 
 const Input: React.FC<InputProps> = (props) => {
@@ -32,6 +33,7 @@ const Input: React.FC<InputProps> = (props) => {
     label,
     className,
     addonAfter,
+    helpText,
   } = props;
   const [inputType, setInputType] = useState(type);
 
@@ -65,6 +67,7 @@ const Input: React.FC<InputProps> = (props) => {
 
         {addonAfter ? <span className="add-on-after">{addonAfter}</span> : null}
       </div>
+      {helpText ? <span className="fs-13 fw-500 mt-1">{helpText}</span> : null}
     </StyledInput>
   );
 };

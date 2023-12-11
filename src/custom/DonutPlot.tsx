@@ -13,7 +13,7 @@ const DonutPlot: React.FC<Props> = (props) => {
     <section
       className="flex items-center justify-center"
       style={{
-        background: `conic-gradient(#01b6a0 ${percentage}%, #e2e2e2 0)`,
+        background: `conic-gradient(#f29f67 ${percentage}%, #e2e2e2 0)`,
         borderRadius: "50%",
         width: size,
         height: size,
@@ -24,10 +24,10 @@ const DonutPlot: React.FC<Props> = (props) => {
           width: "80%",
           height: "80%",
           borderRadius: "50%",
-          backgroundColor: "#1e1e2c",
-          color: "#01b6a0",
+          backgroundColor: "#fff",
+          // color: "#f29f67",
         }}
-        className="flex items-center justify-center fs-24 fw-600"
+        className="flex items-center justify-center fs-16 fw-600 fc-dark"
       >
         {`${Math.floor(percentage)}%`}
       </div>
