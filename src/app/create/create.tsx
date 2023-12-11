@@ -8,9 +8,11 @@ import {
   RadioGroup,
   Select,
   Switch,
+  AppLink,
 } from "@/custom";
 import { useState } from "react";
 import styled from "styled-components";
+import ArrowIcon from "@public/icons/arrow.svg";
 
 interface Props {}
 
@@ -51,7 +53,17 @@ const Create: React.FC<Props> = () => {
 
   return (
     <>
-      <h1 className="mt-5 fs-24">Create Upload Field</h1>
+      <div className="mt-5 flex items-center gap-3">
+        <AppLink href="/">
+          <span
+            style={{ width: 32, height: 32, borderRadius: 4, border: "1px solid #cfcfcf" }}
+            className="flex items-center justify-center"
+          >
+            <ArrowIcon style={{ width: 12, rotate: "-90deg", color: "#797979" }} />
+          </span>
+        </AppLink>
+        <h1 className="fs-24">Create Upload Field</h1>
+      </div>
 
       <StyledPage className="py-5">
         <div className="form-section flex flex-col gap-6 flex-1">
