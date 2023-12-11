@@ -15,6 +15,7 @@ import styled from "styled-components";
 interface Props {}
 
 const Create: React.FC<Props> = () => {
+  const [previewStyle, setPreviewStyle] = useState("button");
   const [fieldName, setFieldName] = useState("");
   const [isRequired, toggleRequired] = useState(false);
   const [targeting, setTargeting] = useState("all-products");
@@ -403,19 +404,97 @@ const Create: React.FC<Props> = () => {
         {/* ----------------------- */}
         {/*     Button Preview      */}
         {/* ----------------------- */}
-        <div className="preview-section">
-          <h1 className="p-2" style={{ borderBottom: "1px solid #dcdcdc" }}>
-            Button Preview
-          </h1>
-          <div className="preview">
-            <div id="field-preview">
-              <p className="field-label fw-500">{labels.labelText}</p>
-              <button className="upload-button bg-light fc-white py-2 px-4 rounded my-1">
-                {labels.buttonText || "Choose file"}
-              </button>
-              <p className="help-text">{labels.helpText}</p>
+        <div
+          style={{ position: "sticky", top: 24, height: "max-content", width: 300, flexShrink: 0 }}
+        >
+          <section className="preview-section">
+            <h1 className="p-2" style={{ borderBottom: "1px solid #dcdcdc" }}>
+              Button Preview
+            </h1>
+            <div className="preview">
+              <div id="field-preview">
+                <p className="field-label fw-500">{labels.labelText}</p>
+                {previewStyle === "button" ? (
+                  <button className="upload-button py-2 px-4 my-1">
+                    {labels.buttonText || "Choose file"}
+                  </button>
+                ) : (
+                  <div
+                    className="upload-button my-1 p-3 rounded text-center"
+                    style={{
+                      border: "1px dashed #1e1e2c",
+                    }}
+                  >
+                    Drag & Drop or Browse
+                  </div>
+                )}
+                <p className="help-text">{labels.helpText}</p>
+              </div>
             </div>
-          </div>
+            <div className="px-3 pb-3">
+              <p>
+                This is how upload field show in your site. It will appear above the Cart button.
+                However you can change its postion by adding a wedgit.
+              </p>
+
+              <Button className="mx-auto mt-2" color="#01b6a0" outlined="true">
+                Add widget
+              </Button>
+            </div>
+          </section>
+
+          <section className="card mt-6">
+            <h1 style={{ borderBottom: "1px solid #dcdcdc" }} className="p-3">
+              Choose Button style
+            </h1>
+
+            <div className="p-3">
+              <h1 className="mb-3">Button Preview</h1>
+
+              <div
+                style={{
+                  border: `2px dashed ${previewStyle === "button" ? "#f29f67" : "#dcdcdc"}`,
+                  borderRadius: 5,
+                  padding: 16,
+                  cursor: "pointer",
+                }}
+                onClick={() => {
+                  setPreviewStyle("button");
+                }}
+              >
+                <p>Upload image</p>
+                <Button className="my-1">Choose file</Button>
+                <p>Some help text</p>
+              </div>
+            </div>
+
+            <div className="p-3">
+              <h1 className="mb-3">Drag & Drop Preview</h1>
+
+              <div
+                style={{
+                  border: `2px dashed ${previewStyle === "dnd" ? "#f29f67" : "#dcdcdc"}`,
+                  borderRadius: 5,
+                  padding: 16,
+                  cursor: "pointer",
+                }}
+                onClick={() => {
+                  setPreviewStyle("dnd");
+                }}
+              >
+                <p>Upload image</p>
+                <div
+                  className="my-1 p-3 rounded text-center"
+                  style={{
+                    border: "1px dashed #1e1e2c",
+                  }}
+                >
+                  Drag & Drop or Browse
+                </div>
+                <p>Some help text</p>
+              </div>
+            </div>
+          </section>
         </div>
       </StyledPage>
 
@@ -465,11 +544,6 @@ const StyledPage = styled("div")`
   .preview-section {
     background-color: #fff;
     border-radius: 8px;
-    width: 300px;
-    height: max-content;
-    flex-shrink: 0;
-    position: sticky;
-    top: 24px;
   }
 
   .preview {
