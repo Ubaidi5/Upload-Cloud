@@ -17,7 +17,6 @@ import ArrowIcon from "@public/icons/arrow.svg";
 interface Props {}
 
 const Create: React.FC<Props> = () => {
-  const [previewStyle, setPreviewStyle] = useState("button");
   const [fieldName, setFieldName] = useState("");
   const [isRequired, toggleRequired] = useState(false);
   const [targeting, setTargeting] = useState("all-products");
@@ -40,7 +39,6 @@ const Create: React.FC<Props> = () => {
     buttonRadius: "4",
     buttonWidth: "max-content",
   });
-
   const [behavior, setBehavior] = useState({
     showPreview: true,
     numberOfFiles: "single",
@@ -50,6 +48,7 @@ const Create: React.FC<Props> = () => {
     imageWidth: "",
     imageHeight: "",
   });
+  const [previewStyle, setPreviewStyle] = useState("button");
 
   return (
     <>
