@@ -25,7 +25,7 @@ export { default as PixelInput } from "./input/pixel_input";
  * Navigation for App
  */
 export { default as AppLink } from "./navigation/Link";
-export { default as useAppRouter } from "./navigation/Link";
+export * from "./navigation/router";
 /**
  * Collapse
  */
