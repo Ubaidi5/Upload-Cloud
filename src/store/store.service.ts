@@ -2,6 +2,7 @@ import { BadRequestException, Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { DBService } from 'src/db/db.service';
 import axios from 'axios';
+import { GetProductDto } from './store.dto';
 
 @Injectable()
 export class StoreService {
@@ -52,18 +53,14 @@ export class StoreService {
 
   async get_access_token(refreshToken: string) {
     try {
-      const requestOptions = {
-        method: 'POST',
-        body: JSON.stringify({
-          grant_type: 'refresh_token',
-          client_id: this.config.get('APP_ID'),
-          client_secret: this.config.get('APP_SECRET'),
-          refresh_token: refreshToken,
-        }),
+      const body = {
+        grant_type: 'refresh_token',
+        client_id: this.config.get('APP_ID'),
+        client_secret: this.config.get('APP_SECRET'),
+        refresh_token: refreshToken,
       };
 
-      const response = await fetch('https://www.wixapis.com/oauth/access', requestOptions);
-      const data = await response.json();
+      const { data } = await axios.post('https://www.wixapis.com/oauth/access', body);
 
       return data.access_token;
     } catch (err) {
@@ -72,31 +69,54 @@ export class StoreService {
   }
 
   async get_app_instance(access_token: string) {
-    const requestOptions = {
-      method: 'GET',
+    const { data } = await axios.get('https://www.wixapis.com/apps/v1/instance', {
       headers: { Authorization: access_token },
-    };
-    const response = await fetch('https://www.wixapis.com/apps/v1/instance', requestOptions);
-    const app = response.json();
-    return app;
+    });
+
+    return data;
   }
 
   async embed_script(instanceId: string, access_token: string) {
     try {
-      const requestOptions = {
-        method: 'POST',
-        body: JSON.stringify({
-          properties: {
-            parameters: {
-              instanceId: instanceId,
-            },
+      const body = {
+        properties: {
+          parameters: {
+            instanceId: instanceId,
           },
-        }),
-        headers: { Authorization: access_token },
+        },
       };
 
-      const response = await fetch('https://www.wixapis.com/apps/v1/scripts', requestOptions);
-      const data = await response.json();
+      const { data } = await axios.post('https://www.wixapis.com/apps/v1/scripts', body, {
+        headers: { Authorization: access_token },
+      });
+
+      return data;
+    } catch (err) {
+      throw new BadRequestException(err);
+    }
+  }
+
+  async get_products(body: GetProductDto, access_token: string) {
+    try {
+      const { data } = await axios.post(
+        `https://www.wixapis.com/stores/v1/${body.type}/query`,
+        {
+          query: {
+            paging: {
+              limit: body.limit,
+              offset: body.offset,
+            },
+          },
+          includeVariants: false,
+          includeHiddenProducts: false,
+          includeMerchantSpecificData: false,
+        },
+        {
+          headers: {
+            Authorization: access_token,
+          },
+        },
+      );
 
       return data;
     } catch (err) {

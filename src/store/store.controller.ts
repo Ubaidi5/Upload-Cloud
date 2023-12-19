@@ -1,5 +1,6 @@
 import { Body, Controller, Get, Headers, Post } from '@nestjs/common';
 import { StoreService } from './store.service';
+import { GetProductDto } from './store.dto';
 
 @Controller('store')
 export class StoreController {
@@ -39,5 +40,11 @@ export class StoreController {
     const access_token = await this.storeService.get_access_token(authorization);
 
     return this.storeService.embed_script(instanceId, access_token);
+  }
+
+  @Post('products')
+  async get_products(@Body() body: GetProductDto, @Headers('authorization') authorization: string) {
+    const access_token = await this.storeService.get_access_token(authorization);
+    return this.storeService.get_products(body, access_token);
   }
 }
