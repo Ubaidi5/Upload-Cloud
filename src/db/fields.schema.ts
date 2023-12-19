@@ -80,10 +80,10 @@ export class Field {
   @Prop()
   previewStyle: string;
 
-  @Prop()
+  @Prop({ default: 'active' })
   status: string; // "" | "deleted"
 
-  @Prop()
+  @Prop({ default: true })
   enabled: boolean;
 
   @Prop()

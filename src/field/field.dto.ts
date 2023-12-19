@@ -1,7 +1,8 @@
-import { IsBoolean, IsString } from 'class-validator';
+import { IsBoolean, IsOptional, IsString } from 'class-validator';
 
 export class FieldDto {
   @IsString()
+  @IsOptional()
   _id: string;
 
   @IsString()
@@ -83,8 +84,13 @@ export class FieldDto {
   previewStyle: string;
 
   @IsString()
+  @IsOptional()
   status: string; // "" | "deleted"
 
   @IsBoolean()
+  @IsOptional()
   enabled: boolean;
+
+  @IsString()
+  instanceId: string;
 }

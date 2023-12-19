@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { DBService } from 'src/db/db.service';
 import { FieldDto } from './field.dto';
 
@@ -6,24 +6,56 @@ import { FieldDto } from './field.dto';
 export class FieldService {
   constructor(private db: DBService) {}
 
-  async create_field(args: FieldDto) {
-    const field = new this.db.fields(args);
-    return field.save();
+  async get_field_by_id(fieldId: string) {
+    try {
+      const field = await this.db.fields.findById(fieldId);
+
+      if (!field) {
+        throw new NotFoundException('Field not found');
+      }
+
+      return field;
+    } catch (err) {
+      throw new BadRequestException(err);
+    }
   }
 
-  async update_field(args: FieldDto) {
-    const { _id, ...rest } = args;
-    const field = await this.db.fields
-      .findOneAndUpdate({ _id: _id }, { $set: { ...rest } }, { new: true })
-      .lean();
+  async get_store_fields(instanceId: string) {
+    try {
+      const fields = await this.db.fields.find({ instanceId: instanceId, status: 'active' });
+      return fields;
+    } catch (err) {
+      throw new BadRequestException(err);
+    }
+  }
 
-    return field;
+  async create_field(args: FieldDto) {
+    try {
+      const field = new this.db.fields(args);
+      return field.save();
+    } catch (err) {
+      throw new BadRequestException(err);
+    }
+  }
+
+  async update_field(args: Partial<FieldDto>) {
+    try {
+      const { _id, ...rest } = args;
+      const field = await this.db.fields
+        .findOneAndUpdate({ _id: _id }, { $set: { ...rest } }, { new: true })
+        .lean();
+
+      return field;
+    } catch (err) {
+      throw new BadRequestException(err);
+    }
   }
 
   async delete_field(fieldId: string) {
-    return this.db.fields.findOneAndUpdate(
-      { _id: fieldId },
-      { $set: { status: false } },
-    );
+    try {
+      return this.db.fields.findOneAndUpdate({ _id: fieldId }, { $set: { status: 'inactive' } });
+    } catch (err) {
+      throw err;
+    }
   }
 }
