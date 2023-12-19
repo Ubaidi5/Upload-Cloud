@@ -4,10 +4,11 @@ interface Props {
   open: boolean;
   onCancel: () => void;
   onDelete: () => void;
+  loading?: boolean;
 }
 
 const DeleteFieldModal: React.FC<Props> = (props) => {
-  const { open, onCancel, onDelete } = props;
+  const { open, onCancel, onDelete, loading } = props;
   return (
     <Modal open={open} onCancel={onCancel} className="py-5" style={{ width: 500 }}>
       <h1 className="text-center fc-danger fs-24">Warning!</h1>
@@ -17,7 +18,9 @@ const DeleteFieldModal: React.FC<Props> = (props) => {
 
       <div className="flex items-center justify-center gap-12">
         <Button onClick={onCancel}>Cancel</Button>
-        <Button bgcolor="#f95f53">Delete</Button>
+        <Button bgcolor="#f95f53" loading={loading} onClick={onDelete}>
+          Delete
+        </Button>
       </div>
     </Modal>
   );
