@@ -47,35 +47,37 @@ interface Window {
   };
 }
 
-type field_placement =
-  | "top_left"
-  | "top_center"
-  | "top_right"
-  | "left_center"
-  | "right_center"
-  | "bottom_left"
-  | "bottom_center"
-  | "bottom_right";
-
 interface Field {
+  fieldName: string;
+  isRequired: boolean;
+  targeting: string;
+  labelText: string;
+  buttonText: string;
+  helpText: string;
+  labelSize: string;
+  labelColor: string;
+  buttonTextSize: string;
+  buttonTextColor: string;
+  helpTextSize: string;
+  helpTextColor: string;
+  paddingX: string;
+  paddingY: string;
+  buttonBackgroundColor: string;
+  buttonHoverColor: string;
+  buttonRadius: string;
+  buttonWidth: string;
+  showPreview: boolean;
+  numberOfFiles: string;
+  min: string;
+  max: string;
+  dimension: string;
+  imageWidth: string;
+  imageHeight: string;
+  previewStyle: string;
   _id: string;
-  placement: field_placement;
-  alignment: "horizontal" | "vertical";
-  color: string;
-  size: number;
-  gap: number;
-  backgroundColor: string;
-  offsetX: number;
-  offsetY: number;
-  paddingX: number;
-  paddingY: number;
-  borderColor: string;
-  borderRadius: number;
-  shadow: string;
-  showOnDesktop: true;
-  showOnMobile: true;
-  icons: string | { label: string; url: string; type: "default"; link: string }[];
-  instanceId: string;
   createdAt: string;
+  updatedAt: string;
   status: string;
+  enabled: boolean;
+  __v: 0;
 }
