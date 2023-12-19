@@ -22,6 +22,9 @@ const APIS = {
   delete_field: (params: any) => {
     return baseURL.delete("/field", { params });
   },
+  get_products: (body: { limit: number; offset: number; type: string }, headers: any) => {
+    return baseURL.post("/store/products", body, { headers });
+  },
 };
 
 export default APIS;
