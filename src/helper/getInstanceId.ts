@@ -1,12 +1,12 @@
-interface iframeDataI {
+interface ParsedInstance {
   instanceId: string;
 }
 
-const get_instance_id = (instance: string) => {
+const getInstanceId = (instance: string) => {
   const base64 = instance?.split(".")[1];
 
   const plain = Buffer.from(base64, "base64").toString("utf8");
-  const json: iframeDataI = JSON.parse(plain);
+  const json: ParsedInstance = JSON.parse(plain);
   return json.instanceId;
 };
-export default get_instance_id;
+export default getInstanceId;
