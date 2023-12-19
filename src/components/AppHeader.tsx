@@ -2,6 +2,7 @@
 import styled from "styled-components";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import AppIcon from "@public/images/fav-icon.svg";
 
 const Header: React.FC = () => {
   const pathname = usePathname();
@@ -12,8 +13,8 @@ const Header: React.FC = () => {
         className="flex items-center px-5 py-[14px] gap-3"
         style={{ borderBottom: "1px solid #E1E3E5" }}
       >
-        <img src="/images/logo.png" alt="Photo comet" width={28} height={28} />
-        <p className="m-0">Upload Cloud</p>
+        <AppIcon style={{ height: 40 }} />
+        <p className="m-0 fw-700 fs-20">Upload Cloud</p>
       </div>
       <StyeledHeader>
         <Link href="/">
