@@ -82,7 +82,7 @@ class Message {
   private cont(div: HTMLDivElement, config?: config) {
     document.getElementById("message-wrapper")?.append(div);
 
-    const TIMEOUT_DURATION = config?.duration || 2;
+    const TIMEOUT_DURATION = config?.duration || 4;
 
     setTimeout(() => {
       document.getElementById("message-wrapper")?.removeChild(div);
