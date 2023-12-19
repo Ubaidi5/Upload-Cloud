@@ -1,4 +1,3 @@
-"use client";
 import { useState, useEffect, useRef, MutableRefObject } from "react";
 import styled from "styled-components";
 import ChevronIcon from "@public/icons/chevron.svg";
@@ -22,7 +21,7 @@ const Table: React.FC<Props> = (props) => {
   const { columns, data, loading, pagination } = props;
   const table_data = useRef(data) as MutableRefObject<Array<any>>;
 
-  const [tableData, setTableData] = useState<Array<any>>([]);
+  const [tableData, setTableData] = useState<Array<any>>(data);
   const [expandedRows, setExpandedRows] = useState<Array<number>>([]);
 
   const header = columns.map((col) => col.title);
@@ -104,7 +103,7 @@ const Table: React.FC<Props> = (props) => {
               <div key={row_index} className="table-row items-center">
                 <section style={{ display: "grid", gridTemplateColumns }}>
                   {columns.map((col, col_index) => (
-                    <div key={col_index} className="fs-14 flex items-center gap-3">
+                    <div key={`${row_index}-${col_index}`} className="fs-14 flex items-center gap-3">
                       {col.expandItem ? (
                         <div style={{ width: 20 }} role="button">
                           {/* This condition will check whether to show the icon on a row.
