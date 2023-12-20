@@ -135,9 +135,9 @@ const Dashboard: React.FC<Props> = (props) => {
                 <p>
                   {
                     {
-                      "all-products": "All Products",
-                      "specific-products": "Specific Products",
-                      "specific-collections": "Specific collections",
+                      all: "All Products",
+                      products: "Specific Products",
+                      collections: "Specific collections",
                     }[field.targeting]
                   }
                 </p>
