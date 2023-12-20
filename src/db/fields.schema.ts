@@ -88,6 +88,9 @@ export class Field {
 
   @Prop()
   instanceId: string;
+
+  @Prop({ default: '[]' })
+  selectedItems: string;
 }
 
 export const FieldSchema = SchemaFactory.createForClass(Field);

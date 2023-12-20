@@ -93,4 +93,7 @@ export class FieldDto {
 
   @IsString()
   instanceId: string;
+
+  @IsString()
+  selectedItems: string;
 }
