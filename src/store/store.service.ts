@@ -106,7 +106,7 @@ export class StoreService {
               limit: body.limit,
               offset: body.offset,
             },
-            filter: `{"name": { "$contains": "${body.search}" } }`,
+            filter: body.search ? `{"name": { "$contains": "${body.search}" } }` : null,
           },
           // includeVariants: false,
           // includeHiddenProducts: false,
