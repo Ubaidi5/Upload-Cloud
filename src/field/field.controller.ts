@@ -8,7 +8,6 @@ export class FieldController {
 
   @Get('/:id?')
   get_field(@Param('id') fieldId: string, @Headers('X-InstanceId') instanceId: string) {
-    console.log({ instanceId });
     if (fieldId) {
       return this.fieldService.get_field_by_id(fieldId);
     } else {
