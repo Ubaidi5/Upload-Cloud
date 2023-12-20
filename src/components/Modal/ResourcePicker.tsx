@@ -1,5 +1,5 @@
 import { MutableRefObject, UIEvent, useCallback, useEffect, useRef, useState } from "react";
-import { message, Modal, Input, Button } from "@/custom";
+import { message, Modal, Input, Button, Spinner } from "@/custom";
 import { APIS, errorHandler, useAPI } from "@/apis/config";
 
 import styled from "styled-components";
@@ -7,10 +7,10 @@ import CancelIcon from "public/icons/cancel.svg";
 
 import SearchOutlined from "@public/icons/search.svg";
 
-const Loading = () => (
+const Loading: React.FC = () => (
   <section className="flex justify-center items-center">
     <div className="text-center">
-      {/* <LoadingOutlined className="mb-2" style={{ color: "#45C2FF", fontSize: 32 }} /> */}
+      <Spinner stroke={3} width={48} />
       <h3>Loading</h3>
     </div>
   </section>
