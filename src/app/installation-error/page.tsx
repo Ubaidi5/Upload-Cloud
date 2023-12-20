@@ -1,8 +1,8 @@
 function InstallationError() {
   return (
-    <div className="flex items-center jc-center" style={{ height: "100vh" }}>
+    <div className="flex items-center justify-center" style={{ height: "100vh" }}>
       <div
-        className="card bg-white p-5 flex items-center jc-center fd-column"
+        className="card bg-white p-5 flex items-center justify-center flex-col"
         style={{ height: 300, width: "70%" }}
       >
         <div>
