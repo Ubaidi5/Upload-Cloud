@@ -6,7 +6,7 @@ interface Props {
 }
 
 const Spinner: React.FC<Props> = (props) => {
-  const { className, width = 24, color = "#6338FA", stroke } = props;
+  const { className, width = 16, color = "#6338FA", stroke } = props;
 
   return (
     <div className={`lds-ring ${className}`}>
@@ -27,7 +27,7 @@ const Spinner: React.FC<Props> = (props) => {
           position: absolute;
           width: ${width}px;
           height: ${width}px;
-          border: ${stroke ? stroke : "1.5"}px solid ${color};
+          border: ${stroke ? stroke : "1"}px solid ${color};
           border-radius: 50%;
           animation: lds-ring 1.2s cubic-bezier(0.5, 0, 0.5, 1) infinite;
           border-color: ${color} transparent transparent transparent;
