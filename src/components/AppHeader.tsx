@@ -1,6 +1,6 @@
 "use client";
 import styled from "styled-components";
-import Link from "next/link";
+import { AppLink } from "@/custom";
 import { usePathname } from "next/navigation";
 import AppIcon from "@public/images/fav-icon.svg";
 
@@ -17,29 +17,29 @@ const Header: React.FC = () => {
         <p className="m-0 fw-700 fs-20">Upload Cloud</p>
       </div>
       <StyeledHeader>
-        <Link href="/">
+        <AppLink href="/">
           <div className={`header-item ${["/", "/order"].includes(pathname) ? "selected" : ""}`}>
             <p className="header-content">Dashboard</p>
           </div>
-        </Link>
+        </AppLink>
 
-        <Link href="/uploads">
+        <AppLink href="/uploads">
           <div className={`header-item ${pathname === "/uploads" ? "selected" : ""}`}>
             <p className="header-content">Uploads</p>
           </div>
-        </Link>
+        </AppLink>
 
-        <Link href="/plan">
+        <AppLink href="/plan">
           <div className={`header-item ${pathname === "/plan" ? "selected" : ""}`}>
             <p className="header-content">Plan</p>
           </div>
-        </Link>
+        </AppLink>
 
-        <Link href="/settings-wix">
+        <AppLink href="/settings-wix">
           <div className={`header-item ${pathname === "/settings-wix" ? "selected" : ""}`}>
             <p className="header-content">Support</p>
           </div>
-        </Link>
+        </AppLink>
       </StyeledHeader>
     </>
   );

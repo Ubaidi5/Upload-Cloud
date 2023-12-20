@@ -3,7 +3,7 @@ interface ResourcePickerInterface {
   type: "products" | "collections" | "variants";
   onSelection?: (selection: Array<any>, variants: any) => void;
   onCancel: () => void;
-  initialSelections?: Array<ProductInterface>;
+  initialSelections?: Array<Omit<ProductInterface, "media" | "productOptions">>;
   selectedVariants?: Array<any>;
 }
 

@@ -12,30 +12,36 @@ import {
   message,
   useAppRouter,
 } from "@/custom";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import styled from "styled-components";
 import ArrowIcon from "@public/icons/arrow.svg";
 import { APIS, errorHandler, useAPI } from "@/apis/config";
 import ResourcePicker from "@/components/Modal/ResourcePicker";
+import CancelIcon from "@public/icons/cancel.svg";
 
 interface Props {
   editMode: boolean;
+  fieldId: string | undefined;
+  field: Field | undefined;
 }
 
 const Create: React.FC<Props> = (props) => {
-  const { editMode = false } = props;
+  const { editMode = false, fieldId, field } = props;
 
   const router = useAppRouter();
 
-  const [fieldName, setFieldName] = useState("");
-  const [isRequired, toggleRequired] = useState(false);
-  const [targeting, setTargeting] = useState("all");
-  const [labels, setLabels] = useState({
+  const [state, setState] = useState<
+    Omit<
+      Field,
+      "createdAt" | "updatedAt" | "_id" | "status" | "enabled" | "instanceId" | "selectedItems"
+    >
+  >({
+    fieldName: "",
+    isRequired: true,
+    targeting: "all",
     labelText: "Upload file",
     buttonText: "Choose image",
     helpText: "",
-  });
-  const [appearance, setAppearance] = useState({
     labelSize: "14",
     labelColor: "#1e1e2c",
     buttonTextSize: "14",
@@ -48,8 +54,6 @@ const Create: React.FC<Props> = (props) => {
     buttonHoverColor: "",
     buttonRadius: "4",
     buttonWidth: "max-content",
-  });
-  const [behavior, setBehavior] = useState({
     showPreview: true,
     numberOfFiles: "single",
     min: "",
@@ -57,39 +61,51 @@ const Create: React.FC<Props> = (props) => {
     dimension: "",
     imageWidth: "",
     imageHeight: "",
+    previewStyle: "button",
   });
-  const [previewStyle, setPreviewStyle] = useState("button");
+
   const [resourcePicker, setResourcePicker] = useState({ open: false, type: "" });
-  const [selectedProducts, setSelectedProducts] = useState([]);
+  const [selectedItems, setSelectedItems] = useState<{ name: string; id: string }[]>([]);
 
   const [create_field, loading] = useAPI(editMode ? APIS.update_field : APIS.create_field);
 
   async function handleSubmit() {
     try {
-      const { data } = await create_field({
-        fieldName,
-        isRequired,
-        targeting,
-        ...labels,
-        ...behavior,
-        ...appearance,
-        previewStyle,
-        instanceId: "b563f0e9-aeee-4a86-a46a-4e918b37f1c3",
-      });
+      const body: Partial<Field> = {
+        ...state,
+        selectedItems: JSON.stringify(selectedItems),
+      };
+
+      if (editMode && fieldId) {
+        body._id = fieldId;
+      } else {
+        body.instanceId = "b563f0e9-aeee-4a86-a46a-4e918b37f1c3";
+      }
+
+      const { data } = await create_field(body);
       router.push("/");
     } catch (err) {
       message.error(errorHandler(err));
     }
   }
 
+  useEffect(() => {
+    console.log(props);
+    if (editMode && field) {
+      setState(field);
+      setSelectedItems(JSON.parse(field.selectedItems));
+    }
+  }, []);
+
   return (
     <>
       <ResourcePicker
         open={resourcePicker.open}
         // type="variants"
-        type={targeting === "collections" ? "collections" : "products"}
+        type={state.targeting === "collections" ? "collections" : "products"}
         onSelection={(products, variants) => {
-          console.log({ products, variants });
+          const mapped = products.map(({ name, id }) => ({ name, id }));
+          setSelectedItems(mapped);
         }}
         onCancel={() => {
           setResourcePicker({
@@ -97,10 +113,11 @@ const Create: React.FC<Props> = (props) => {
             type: "",
           });
         }}
+        initialSelections={selectedItems}
       />
 
       <section className="mt-5 flex items-center justify-between gap-3">
-        <div>
+        <div className="flex items-center gap-4">
           <AppLink href="/">
             <span
               style={{ width: 32, height: 32, borderRadius: 4, border: "1px solid #cfcfcf" }}
@@ -109,7 +126,9 @@ const Create: React.FC<Props> = (props) => {
               <ArrowIcon style={{ width: 12, rotate: "-90deg", color: "#797979" }} />
             </span>
           </AppLink>
-          <h1 className="fs-24">Create Upload Field</h1>
+          <h1 className="fs-24">
+            {editMode ? `Editing: ${field?.fieldName}` : "Create Upload Field"}
+          </h1>
         </div>
         <div>
           <Button onClick={handleSubmit} loading={loading}>
@@ -125,8 +144,8 @@ const Create: React.FC<Props> = (props) => {
               <p>Field name</p>
               <Input
                 placeholder="Enter a field name to remember"
-                value={fieldName}
-                onChange={(e) => setFieldName(e.target.value)}
+                value={state.fieldName}
+                onChange={(e) => setState({ ...state, fieldName: e.target.value })}
               />
             </div>
 
@@ -134,8 +153,8 @@ const Create: React.FC<Props> = (props) => {
               <span>Upload field required</span>
               <Switch
                 size={20}
-                checked={isRequired}
-                onChange={(checked) => toggleRequired(checked)}
+                checked={state.isRequired}
+                onChange={(checked) => setState({ ...state, isRequired: checked })}
               />
             </div>
           </section>
@@ -156,33 +175,68 @@ const Create: React.FC<Props> = (props) => {
                       { label: "Specific Products", value: "products" },
                       { label: "Specific collections", value: "collections" },
                     ]}
-                    value={targeting}
+                    value={state.targeting}
                     onChange={(val) => {
-                      setTargeting(val);
+                      setState((prev) => {
+                        if (
+                          (prev.targeting === "collections" && prev.targeting !== val) ||
+                          (["all", "products"].includes(prev.targeting) && val === "collections")
+                        ) {
+                          setSelectedItems([]);
+                        }
+
+                        return { ...state, targeting: val };
+                      });
                     }}
                   />
                 </section>
 
                 <section style={{ width: 160 }}>
                   <p className="fs-12 mb-0 text-center fw-500">
-                    {targeting === "all"
+                    {state.targeting === "all"
                       ? "Choose any product to exclude"
-                      : `Click to add ${targeting === "products" ? "products" : "collections"}`}
+                      : `Click to add ${
+                          state.targeting === "products" ? "products" : "collections"
+                        }`}
                   </p>
 
                   <Button
                     style={{ width: "100%" }}
                     onClick={() => {
-                      setResourcePicker({ open: true, type: targeting });
+                      setResourcePicker({ open: true, type: state.targeting });
                     }}
                   >
-                    {targeting === "all"
+                    {state.targeting === "all"
                       ? "Excluding"
-                      : targeting === "products"
+                      : state.targeting === "products"
                       ? "Choose products"
                       : "Choose collections"}
                   </Button>
                 </section>
+              </div>
+
+              {state.targeting === "all" && selectedItems.length ? (
+                <p className="mt-2 mb-1">Your upload field show on all products except:</p>
+              ) : null}
+
+              <div className="flex gap-2 mt-2">
+                {selectedItems.map((product, index) => (
+                  <p
+                    key={index}
+                    style={{ backgroundColor: "#ececec", padding: 6, borderRadius: 4 }}
+                    className="flex items-center gap-2"
+                  >
+                    <span>{product.name}</span>
+                    <CancelIcon
+                      style={{ width: 16, color: "#9b9a9a" }}
+                      role="button"
+                      onClick={() => {
+                        selectedItems.splice(index, 1);
+                        setSelectedItems([...selectedItems]);
+                      }}
+                    />
+                  </p>
+                ))}
               </div>
             </div>
           </section>
@@ -197,8 +251,8 @@ const Create: React.FC<Props> = (props) => {
                 <p>Label text</p>
                 <Input
                   placeholder="Upload file"
-                  value={labels.labelText}
-                  onChange={(e) => setLabels({ ...labels, labelText: e.target.value })}
+                  value={state.labelText}
+                  onChange={(e) => setState({ ...state, labelText: e.target.value })}
                 />
                 <p>This text will show above your button.</p>
               </div>
@@ -207,8 +261,8 @@ const Create: React.FC<Props> = (props) => {
                 <p>Button text</p>
                 <Input
                   placeholder="Choose a file"
-                  value={labels.buttonText}
-                  onChange={(e) => setLabels({ ...labels, buttonText: e.target.value })}
+                  value={state.buttonText}
+                  onChange={(e) => setState({ ...state, buttonText: e.target.value })}
                 />
                 <p>The text of your button</p>
               </div>
@@ -217,8 +271,8 @@ const Create: React.FC<Props> = (props) => {
                 <p>Help text</p>
                 <Input
                   placeholder="e.g. Please avoid blur image"
-                  value={labels.helpText}
-                  onChange={(e) => setLabels({ ...labels, helpText: e.target.value })}
+                  value={state.helpText}
+                  onChange={(e) => setState({ ...state, helpText: e.target.value })}
                 />
                 <p>This text will show below the button.</p>
               </div>
@@ -238,9 +292,9 @@ const Create: React.FC<Props> = (props) => {
                 <div className="flex items-center justify-between">
                   <p>Label size</p>
                   <PixelInput
-                    value={appearance.labelSize}
+                    value={state.labelSize}
                     onChange={(val) => {
-                      setAppearance({ ...appearance, labelSize: val });
+                      setState({ ...state, labelSize: val });
                     }}
                   />
                 </div>
@@ -248,9 +302,9 @@ const Create: React.FC<Props> = (props) => {
                 <div className="flex items-center justify-between">
                   <p>Button text size</p>
                   <PixelInput
-                    value={appearance.buttonTextSize}
+                    value={state.buttonTextSize}
                     onChange={(val) => {
-                      setAppearance({ ...appearance, buttonTextSize: val });
+                      setState({ ...state, buttonTextSize: val });
                     }}
                   />
                 </div>
@@ -258,9 +312,9 @@ const Create: React.FC<Props> = (props) => {
                 <div className="flex items-center justify-between">
                   <p>Help text size</p>
                   <PixelInput
-                    value={appearance.helpTextSize}
+                    value={state.helpTextSize}
                     onChange={(val) => {
-                      setAppearance({ ...appearance, helpTextSize: val });
+                      setState({ ...state, helpTextSize: val });
                     }}
                   />
                 </div>
@@ -268,9 +322,9 @@ const Create: React.FC<Props> = (props) => {
                 <div className="flex items-center justify-between">
                   <p>Button padding horizontal</p>
                   <PixelInput
-                    value={appearance.paddingX}
+                    value={state.paddingX}
                     onChange={(val) => {
-                      setAppearance({ ...appearance, paddingX: val });
+                      setState({ ...state, paddingX: val });
                     }}
                   />
                 </div>
@@ -278,9 +332,9 @@ const Create: React.FC<Props> = (props) => {
                 <div className="flex items-center justify-between">
                   <p>Button padding vertical</p>
                   <PixelInput
-                    value={appearance.paddingY}
+                    value={state.paddingY}
                     onChange={(val) => {
-                      setAppearance({ ...appearance, paddingY: val });
+                      setState({ ...state, paddingY: val });
                     }}
                   />
                 </div>
@@ -288,9 +342,9 @@ const Create: React.FC<Props> = (props) => {
                 <div className="flex items-center justify-between">
                   <p>Button radius</p>
                   <PixelInput
-                    value={appearance.buttonRadius}
+                    value={state.buttonRadius}
                     onChange={(val) => {
-                      setAppearance({ ...appearance, buttonRadius: val });
+                      setState({ ...state, buttonRadius: val });
                     }}
                   />
                 </div>
@@ -300,9 +354,9 @@ const Create: React.FC<Props> = (props) => {
                 <div className="flex items-center justify-between">
                   <p>Label color</p>
                   <ColorPicker
-                    color={appearance.labelColor}
+                    color={state.labelColor}
                     onChange={(color) => {
-                      setAppearance({ ...appearance, labelColor: color });
+                      setState({ ...state, labelColor: color });
                     }}
                   />
                 </div>
@@ -310,9 +364,9 @@ const Create: React.FC<Props> = (props) => {
                 <div className="flex items-center justify-between">
                   <p>Button text color</p>
                   <ColorPicker
-                    color={appearance.buttonTextColor}
+                    color={state.buttonTextColor}
                     onChange={(color) => {
-                      setAppearance({ ...appearance, buttonTextColor: color });
+                      setState({ ...state, buttonTextColor: color });
                     }}
                   />
                 </div>
@@ -320,9 +374,9 @@ const Create: React.FC<Props> = (props) => {
                 <div className="flex items-center justify-between">
                   <p>Help text color</p>
                   <ColorPicker
-                    color={appearance.helpTextColor}
+                    color={state.helpTextColor}
                     onChange={(color) => {
-                      setAppearance({ ...appearance, helpTextColor: color });
+                      setState({ ...state, helpTextColor: color });
                     }}
                   />
                 </div>
@@ -330,9 +384,9 @@ const Create: React.FC<Props> = (props) => {
                 <div className="flex items-center justify-between">
                   <p>Button background</p>
                   <ColorPicker
-                    color={appearance.buttonBackgroundColor}
+                    color={state.buttonBackgroundColor}
                     onChange={(color) => {
-                      setAppearance({ ...appearance, buttonBackgroundColor: color });
+                      setState({ ...state, buttonBackgroundColor: color });
                     }}
                   />
                 </div>
@@ -340,9 +394,9 @@ const Create: React.FC<Props> = (props) => {
                 <div className="flex items-center justify-between">
                   <p>Button hover</p>
                   <ColorPicker
-                    color={appearance.buttonHoverColor}
+                    color={state.buttonHoverColor}
                     onChange={(color) => {
-                      setAppearance({ ...appearance, buttonHoverColor: color });
+                      setState({ ...state, buttonHoverColor: color });
                     }}
                   />
                 </div>
@@ -355,9 +409,9 @@ const Create: React.FC<Props> = (props) => {
                       { label: "Full width", value: "100%" },
                       { label: "Auto", value: "max-content" },
                     ]}
-                    value={appearance.buttonWidth}
+                    value={state.buttonWidth}
                     onChange={(val) => {
-                      setAppearance({ ...appearance, buttonWidth: val });
+                      setState({ ...state, buttonWidth: val });
                     }}
                   />
                 </div>
@@ -385,14 +439,14 @@ const Create: React.FC<Props> = (props) => {
                     { label: "Single file", value: "single" },
                     { label: "Sepecific quantity", value: "multiple" },
                   ]}
-                  value={behavior.numberOfFiles}
+                  value={state.numberOfFiles}
                   onChange={(val) => {
-                    setBehavior({ ...behavior, numberOfFiles: val });
+                    setState({ ...state, numberOfFiles: val });
                   }}
                 />
               </section>
 
-              {behavior.numberOfFiles === "multiple" ? (
+              {state.numberOfFiles === "multiple" ? (
                 <section className="flex items-center gap-6 flex-1">
                   <Input
                     className="flex-1"
@@ -400,9 +454,9 @@ const Create: React.FC<Props> = (props) => {
                     placeholder="1"
                     min={1}
                     type="number"
-                    value={behavior.min}
+                    value={state.min}
                     onChange={(e) => {
-                      setBehavior({ ...behavior, min: e.target.value });
+                      setState({ ...state, min: e.target.value });
                     }}
                   />
 
@@ -412,9 +466,9 @@ const Create: React.FC<Props> = (props) => {
                     placeholder="5"
                     min={1}
                     type="number"
-                    value={behavior.max}
+                    value={state.max}
                     onChange={(e) => {
-                      setBehavior({ ...behavior, max: e.target.value });
+                      setState({ ...state, max: e.target.value });
                     }}
                   />
                 </section>
@@ -430,23 +484,23 @@ const Create: React.FC<Props> = (props) => {
                     { label: "Specific width and height", value: "dimension" },
                     { label: "Aspect ratio", value: "aspect radio" },
                   ]}
-                  value={behavior.dimension}
+                  value={state.dimension}
                   onChange={(val) => {
-                    setBehavior({ ...behavior, dimension: val });
+                    setState({ ...state, dimension: val });
                   }}
                 />
               </section>
 
-              {behavior.dimension ? (
+              {state.dimension ? (
                 <section className="flex-1">
                   <div className="flex items-center gap-6 ">
                     <Input
                       className="flex-1"
                       label="Width"
                       placeholder="Width"
-                      value={behavior.imageWidth}
+                      value={state.imageWidth}
                       onChange={(e) => {
-                        setBehavior({ ...behavior, imageHeight: e.target.value });
+                        setState({ ...state, imageHeight: e.target.value });
                       }}
                     />
 
@@ -454,9 +508,9 @@ const Create: React.FC<Props> = (props) => {
                       className="flex-1"
                       label="Height"
                       placeholder="Height"
-                      value={behavior.imageHeight}
+                      value={state.imageHeight}
                       onChange={(e) => {
-                        setBehavior({ ...behavior, imageHeight: e.target.value });
+                        setState({ ...state, imageHeight: e.target.value });
                       }}
                     />
                   </div>
@@ -481,22 +535,24 @@ const Create: React.FC<Props> = (props) => {
             </h1>
             <div className="preview">
               <div id="field-preview">
-                <p className="field-label fw-500">{labels.labelText}</p>
-                {previewStyle === "button" ? (
+                <p className="field-label fw-500">{state.labelText}</p>
+                {state.previewStyle === "button" ? (
                   <button className="upload-button py-2 px-4 my-1">
-                    {labels.buttonText || "Choose file"}
+                    {state.buttonText || "Choose file"}
                   </button>
                 ) : (
                   <div
                     className="upload-button my-1 p-3 rounded text-center"
                     style={{
                       border: "1px dashed #1e1e2c",
+                      width: "100%",
+                      cursor: "pointer",
                     }}
                   >
-                    Drag & Drop or Browse
+                    {state.buttonText || "Drag & Drop or Browse"}
                   </div>
                 )}
-                <p className="help-text">{labels.helpText}</p>
+                <p className="help-text">{state.helpText}</p>
               </div>
             </div>
             <div className="px-3 pb-3">
@@ -521,17 +577,17 @@ const Create: React.FC<Props> = (props) => {
 
               <div
                 style={{
-                  border: `2px dashed ${previewStyle === "button" ? "#f29f67" : "#dcdcdc"}`,
+                  border: `2px dashed ${state.previewStyle === "button" ? "#f29f67" : "#dcdcdc"}`,
                   borderRadius: 5,
                   padding: 16,
                   cursor: "pointer",
                 }}
                 onClick={() => {
-                  setPreviewStyle("button");
+                  setState({ ...state, previewStyle: "button", buttonText: "Choose image" });
                 }}
               >
                 <p>Upload image</p>
-                <Button className="my-1">Choose file</Button>
+                <Button className="my-1">Choose image</Button>
                 <p>Some help text</p>
               </div>
             </div>
@@ -541,13 +597,13 @@ const Create: React.FC<Props> = (props) => {
 
               <div
                 style={{
-                  border: `2px dashed ${previewStyle === "dnd" ? "#f29f67" : "#dcdcdc"}`,
+                  border: `2px dashed ${state.previewStyle === "dnd" ? "#f29f67" : "#dcdcdc"}`,
                   borderRadius: 5,
                   padding: 16,
                   cursor: "pointer",
                 }}
                 onClick={() => {
-                  setPreviewStyle("dnd");
+                  setState({ ...state, previewStyle: "dnd", buttonText: "Drag & Drop or Browse" });
                 }}
               >
                 <p>Upload image</p>
@@ -573,29 +629,29 @@ const Create: React.FC<Props> = (props) => {
           }
 
           #field-preview .field-label {
-            font-size: ${appearance.labelSize}px;
-            color: ${appearance.labelColor};
+            font-size: ${state.labelSize}px;
+            color: ${state.labelColor};
           }
           #field-preview .upload-button {
             transition: 0.2s ease-out;
-            font-size: ${appearance.buttonTextSize}px;
-            color: ${appearance.buttonTextColor};
-            background-color: ${appearance.buttonBackgroundColor};
-            padding: ${appearance.paddingY}px ${appearance.paddingX}px;
-            border-radius: ${appearance.buttonRadius}px;
-            width: ${appearance.buttonWidth};
+            font-size: ${state.buttonTextSize}px;
+            color: ${state.buttonTextColor};
+            background-color: ${state.buttonBackgroundColor};
+            padding: ${state.paddingY}px ${state.paddingX}px;
+            border-radius: ${state.buttonRadius}px;
+            width: ${state.buttonWidth};
           }
 
           ${
-            appearance.buttonHoverColor &&
+            state.buttonHoverColor &&
             `#field-preview .upload-button:hover{
-            background-color: ${appearance.buttonHoverColor}
+            background-color: ${state.buttonHoverColor}
           }`
           }
 
           #field-preview .help-text {
-            font-size: ${appearance.helpTextSize}px;
-            color: ${appearance.helpTextColor};
+            font-size: ${state.helpTextSize}px;
+            color: ${state.helpTextColor};
           }
         `}
       </style>

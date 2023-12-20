@@ -79,5 +79,6 @@ interface Field {
   updatedAt: string;
   status: string;
   enabled: boolean;
-  __v: 0;
+  instanceId: string;
+  selectedItems: string;
 }
