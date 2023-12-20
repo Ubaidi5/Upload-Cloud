@@ -1,8 +1,8 @@
 interface ResourcePickerInterface {
   open: boolean;
   type: "products" | "collections" | "variants";
-  onOk?: (selection: any, variants: any) => void;
-  closeModal?: () => void;
+  onSelection?: (selection: Array<any>, variants: any) => void;
+  onCancel: () => void;
   initialSelections?: Array<ProductInterface>;
   selectedVariants?: Array<any>;
 }

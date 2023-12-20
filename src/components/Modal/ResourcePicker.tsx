@@ -24,9 +24,9 @@ type Meta = {
 };
 
 const ResourcePicker: React.FC<ResourcePickerInterface> = (props) => {
-  const { open, closeModal, type, onOk, initialSelections, selectedVariants } = props;
+  const { open, onCancel, type, onSelection, initialSelections, selectedVariants } = props;
 
-  const metaRef = useRef({ offset: 0 }) as MutableRefObject<Meta>;
+  const metaRef = useRef({ offset: 0, search: "" }) as MutableRefObject<Meta>;
   const timeoutID = useRef() as MutableRefObject<NodeJS.Timeout>;
 
   const [allProducts, setAllProducts] = useState<ProductInterface[]>([]);
@@ -35,10 +35,7 @@ const ResourcePicker: React.FC<ResourcePickerInterface> = (props) => {
 
   const getAllProducts = async (body: any) => {
     try {
-      const { data } = await get_products(body, {
-        Authorization:
-          "OAUTH2.eyJraWQiOiJkZ0x3cjNRMCIsImFsZyI6IkhTMjU2In0.eyJkYXRhIjoie1wiaWRcIjpcIjdmZjM0YjdhLWI0MWUtNDRhZi1hMmFiLTBlYzExZGE5NTNhMlwifSIsImlhdCI6MTcwMjkyNTM0NSwiZXhwIjoxNzY1OTk3MzQ1fQ.xBg6bXgHb16WNAO3N8-8H5plCO7_RYDiEn4S6kOcdRQ",
-      });
+      const { data } = await get_products({ ...body, limit: 10 });
       const tempData: Array<ProductInterface> = data.products || data.collections;
 
       /**
@@ -85,7 +82,7 @@ const ResourcePicker: React.FC<ResourcePickerInterface> = (props) => {
     }
   };
 
-  const onSelection = () => {
+  const on_selection = () => {
     let selectedItems: Array<ProductInterface> = [];
     let selectedVaraints: Array<any> = [];
 
@@ -133,8 +130,8 @@ const ResourcePicker: React.FC<ResourcePickerInterface> = (props) => {
     }
 
     // console.log("Selected Variants", selectedVaraints);
-    onOk?.(selectedItems, selectedVaraints);
-    closeModal?.();
+    onSelection?.(selectedItems, selectedVaraints);
+    onCancel?.();
   };
 
   const debounce = useCallback(
@@ -143,7 +140,7 @@ const ResourcePicker: React.FC<ResourcePickerInterface> = (props) => {
 
       timeoutID.current = setTimeout(() => {
         metaRef.current.search = search;
-        getAllProducts({ offset: 0, search });
+        getAllProducts({ offset: 0, search, type });
       }, 600);
     },
     [open]
@@ -157,26 +154,23 @@ const ResourcePicker: React.FC<ResourcePickerInterface> = (props) => {
       allProducts.length < metaRef.current.totalResult // If all products is not fetched
     ) {
       const offset = metaRef.current.offset + metaRef.current.items;
-      getAllProducts({ offset, search: "" });
+      getAllProducts({ offset, search: metaRef.current.search, type });
     }
   };
 
   useEffect(() => {
     if (open) {
       allProducts.length = 0;
-      getAllProducts({ offset: 0, limit: 10, type: "products" });
+      getAllProducts({ offset: 0, type: type, search: metaRef.current.search });
     }
   }, [open]);
 
   return (
-    <StyledModal open={open} onCancel={() => closeModal?.()} style={{ padding: 0 }}>
+    <StyledModal open={open} onCancel={() => onCancel?.()} style={{ padding: 0 }}>
       <header className="header">
         <div className="p-3 flex items-center justify-between">
           <p className="m-0 pl-1 fs-20 capitalize">{type}</p>
-          <CancelIcon
-            style={{ height: 16, width: "auto", cursor: "pointer" }}
-            onClick={closeModal}
-          />
+          <CancelIcon style={{ height: 16, width: "auto", cursor: "pointer" }} onClick={onCancel} />
         </div>
       </header>
 
@@ -289,6 +283,14 @@ const ResourcePicker: React.FC<ResourcePickerInterface> = (props) => {
           </div>
         )}
       </div>
+
+      <section
+        className="flex justify-between gap-8 py-3 px-8"
+        style={{ borderTop: "1px solid #e1e3e5" }}
+      >
+        <Button outlined="true">Cancel</Button>
+        <Button onClick={on_selection}>Select</Button>
+      </section>
     </StyledModal>
   );
 };

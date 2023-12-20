@@ -16,6 +16,7 @@ import { useState } from "react";
 import styled from "styled-components";
 import ArrowIcon from "@public/icons/arrow.svg";
 import { APIS, errorHandler, useAPI } from "@/apis/config";
+import ResourcePicker from "@/components/Modal/ResourcePicker";
 
 interface Props {
   editMode: boolean;
@@ -28,7 +29,7 @@ const Create: React.FC<Props> = (props) => {
 
   const [fieldName, setFieldName] = useState("");
   const [isRequired, toggleRequired] = useState(false);
-  const [targeting, setTargeting] = useState("all-products");
+  const [targeting, setTargeting] = useState("all");
   const [labels, setLabels] = useState({
     labelText: "Upload file",
     buttonText: "Choose image",
@@ -58,6 +59,8 @@ const Create: React.FC<Props> = (props) => {
     imageHeight: "",
   });
   const [previewStyle, setPreviewStyle] = useState("button");
+  const [resourcePicker, setResourcePicker] = useState({ open: false, type: "" });
+  const [selectedProducts, setSelectedProducts] = useState([]);
 
   const [create_field, loading] = useAPI(editMode ? APIS.update_field : APIS.create_field);
 
@@ -81,6 +84,21 @@ const Create: React.FC<Props> = (props) => {
 
   return (
     <>
+      <ResourcePicker
+        open={resourcePicker.open}
+        // type="variants"
+        type={targeting === "collections" ? "collections" : "products"}
+        onSelection={(products, variants) => {
+          console.log({ products, variants });
+        }}
+        onCancel={() => {
+          setResourcePicker({
+            open: false,
+            type: "",
+          });
+        }}
+      />
+
       <section className="mt-5 flex items-center justify-between gap-3">
         <div>
           <AppLink href="/">
@@ -134,9 +152,9 @@ const Create: React.FC<Props> = (props) => {
                   <Select
                     placeholder="Select"
                     options={[
-                      { label: "All Products", value: "all-products" },
-                      { label: "Specific Products", value: "specific-products" },
-                      { label: "Specific collections", value: "specific-collections" },
+                      { label: "All Products", value: "all" },
+                      { label: "Specific Products", value: "products" },
+                      { label: "Specific collections", value: "collections" },
                     ]}
                     value={targeting}
                     onChange={(val) => {
@@ -147,18 +165,21 @@ const Create: React.FC<Props> = (props) => {
 
                 <section style={{ width: 160 }}>
                   <p className="fs-12 mb-0 text-center fw-500">
-                    {targeting === "all-products"
+                    {targeting === "all"
                       ? "Choose any product to exclude"
-                      : `Click to add ${
-                          targeting === "specific-products" ? "products" : "collections"
-                        }`}
+                      : `Click to add ${targeting === "products" ? "products" : "collections"}`}
                   </p>
 
-                  <Button style={{ width: "100%" }}>
-                    {targeting === "all-products"
+                  <Button
+                    style={{ width: "100%" }}
+                    onClick={() => {
+                      setResourcePicker({ open: true, type: targeting });
+                    }}
+                  >
+                    {targeting === "all"
                       ? "Excluding"
-                      : targeting === "specific-products"
-                      ? "Choose Products"
+                      : targeting === "products"
+                      ? "Choose products"
                       : "Choose collections"}
                   </Button>
                 </section>
