@@ -1,5 +1,5 @@
 import styled, { css } from "styled-components";
-import LoadingIcon from "@public/icons/loading.svg";
+import { Spinner } from "@/custom";
 
 interface Props {
   children: any;
@@ -40,7 +40,7 @@ const Button: React.FC<Props> = (props) => {
         role="button"
       >
         {loading ? (
-          <LoadingIcon className="rotate" style={{ color: "#fff", width: 16 }} />
+          <Spinner color={outlined === "true" ? color || "#6338FA" : "#fff"} />
         ) : (
           iconBefore
         )}
