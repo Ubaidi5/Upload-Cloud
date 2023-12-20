@@ -1,5 +1,13 @@
 import { baseURL } from "./config";
 
+function getHeaders() {
+  const refreshToken = localStorage.getItem("__UC_refresh_token");
+
+  return {
+    Authorization: refreshToken,
+  };
+}
+
 const APIS = {
   load_store: (params: any) => {
     return baseURL.get("/store/load", { params });
@@ -22,7 +30,8 @@ const APIS = {
   delete_field: (params: any) => {
     return baseURL.delete("/field", { params });
   },
-  get_products: (body: { limit: number; offset: number; type: string }, headers: any) => {
+  get_products: (body: { limit: number; offset: number; type: string }) => {
+    const headers = getHeaders();
     return baseURL.post("/store/products", body, { headers });
   },
 };
