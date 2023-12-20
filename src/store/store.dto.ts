@@ -1,4 +1,4 @@
-import { IsEnum, IsNumber } from 'class-validator';
+import { IsEnum, IsNumber, IsOptional, IsString } from 'class-validator';
 
 enum Category {
   products = 'products',
@@ -14,4 +14,8 @@ export class GetProductDto {
 
   @IsEnum(Category)
   type: Category;
+
+  @IsString()
+  @IsOptional()
+  search: string;
 }

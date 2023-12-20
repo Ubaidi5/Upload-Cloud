@@ -106,10 +106,11 @@ export class StoreService {
               limit: body.limit,
               offset: body.offset,
             },
+            filter: `{"name": { "$contains": "${body.search}" } }`,
           },
-          includeVariants: false,
-          includeHiddenProducts: false,
-          includeMerchantSpecificData: false,
+          // includeVariants: false,
+          // includeHiddenProducts: false,
+          // includeMerchantSpecificData: false,
         },
         {
           headers: {
