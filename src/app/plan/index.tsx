@@ -1,12 +1,23 @@
 "use client";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useAppData } from "@/context/store";
 import { getDifferenceInDays } from "@/helper/getDifferenceInDays";
 import { Button, Segment, AppLink } from "@/custom";
 import ErrorIcon from "@public/icons/error.svg";
 import ArrowIcon from "@public/icons/arrow.svg";
 
-const plans = [
+type plan_types = "basic" | "essential" | "pinnacle" | "infinite";
+
+type Plan = {
+  id: plan_types;
+  name: string;
+  yearly: string;
+  monthly: string;
+  features: Array<string>;
+  route: (metaSideId: string) => void;
+};
+
+const plans: Array<Plan> = [
   {
     id: "basic",
     name: "Basic",
@@ -18,7 +29,7 @@ const plans = [
       "File uploads stored for 10 days",
       "Limited support",
     ],
-    route: (metaSiteId?: string) => {
+    route: (metaSiteId) => {
       top &&
         (top.window.location.href = `https://manage.wix.com/upgrade/app/${process.env.NEXT_PUBLIC_APP_ID}/plan/00d6a9b1-c8e1-4a29-a574-6290762688d4/payment-cycle?meta-site-id=${metaSiteId}`);
     },
@@ -34,7 +45,7 @@ const plans = [
       "Max. 20MB upload file size",
       "10GB archive space",
     ],
-    route: (metaSiteId?: string) => {
+    route: (metaSiteId) => {
       top &&
         (top.window.location.href = `https://manage.wix.com/upgrade/app/${process.env.NEXT_PUBLIC_APP_ID}/plan/51caf23e-220e-43b3-829d-924ad4e4a6dd/payment-cycle?meta-site-id=${metaSiteId}`);
     },
@@ -50,7 +61,7 @@ const plans = [
       "50GB archive space",
       "24/7 support",
     ],
-    route: (metaSiteId?: string) => {
+    route: (metaSiteId) => {
       top &&
         (top.window.location.href = `https://manage.wix.com/upgrade/app/${process.env.NEXT_PUBLIC_APP_ID}/plan/51caf23e-220e-43b3-829d-924ad4e4a6dd/payment-cycle?meta-site-id=${metaSiteId}`);
     },
@@ -66,20 +77,18 @@ const plans = [
       "100GB archive space",
       "24/7 support",
     ],
-    route: (metaSiteId?: string) => {
+    route: (metaSiteId) => {
       top &&
         (top.window.location.href = `https://manage.wix.com/upgrade/app/${process.env.NEXT_PUBLIC_APP_ID}/plan/51caf23e-220e-43b3-829d-924ad4e4a6dd/payment-cycle?meta-site-id=${metaSiteId}`);
     },
   },
 ];
 
-type plan_types = "basic" | "essential" | "pinnacle" | "infinite";
-
 const PlanPage: React.FC = () => {
   const [appData] = useAppData();
   const [segment, setSegment] = useState("monthly");
 
-  const current_plan = (appData.instance.billing?.packageName || "essential") as plan_types;
+  const current_plan = (appData.instance.billing?.packageName || "basic") as plan_types;
 
   const remaining_days =
     30 -
@@ -87,6 +96,31 @@ const PlanPage: React.FC = () => {
       new Date(appData.store?.installedAt || new Date()).getTime(),
       new Date().getTime()
     );
+
+  function getButtonText(plan: Plan) {
+    const int_value = {
+      basic: 1,
+      essential: 2,
+      pinnacle: 3,
+      infinite: 4,
+    };
+
+    if (appData.instance.billing?.billingCycle === "Monthly" && segment === "yearly") {
+      return "Upgrade";
+    } else if (int_value[current_plan] === int_value[plan.id]) {
+      return "Active";
+    } else if (int_value[current_plan] < int_value[plan.id]) {
+      return "Upgrade";
+    } else {
+      return "Downgrade";
+    }
+  }
+
+  useEffect(() => {
+    if (appData.instance.billing && appData.instance.billing.billingCycle) {
+      setSegment(appData.instance.billing.billingCycle.toLowerCase());
+    }
+  }, [appData.instance.billing]);
 
   return (
     <>
@@ -127,17 +161,19 @@ const PlanPage: React.FC = () => {
           <p className="mt-3 fc-dark">Choose a plan that suits you best</p>
         </div>
 
-        <Segment
-          className="mt-5 mb-10 mx-auto"
-          value={segment}
-          onChange={setSegment}
-          options={[
-            { label: "Monthly", value: "monthly" },
-            { label: "Yearly", value: "yearly" },
-          ]}
-        />
+        {appData.instance.billing?.billingCycle === "YEARLY" ? null : (
+          <Segment
+            className="mt-5 mx-auto"
+            value={segment}
+            onChange={setSegment}
+            options={[
+              { label: "Monthly", value: "monthly" },
+              { label: "Yearly", value: "yearly" },
+            ]}
+          />
+        )}
 
-        <div className="flex justify-center mt-5 bg-white" style={{ border: "1px solid #dcdcdc" }}>
+        <div className="flex justify-center mt-11 bg-white" style={{ border: "1px solid #dcdcdc" }}>
           {plans.map((plan, index) => {
             const [w, d] = plan[segment as "yearly" | "monthly"].split("."); // whole | decimal
             return (
@@ -152,13 +188,14 @@ const PlanPage: React.FC = () => {
                   {plan.id === current_plan &&
                   appData.instance.billing?.billingCycle === segment.toUpperCase() ? (
                     <div
-                      className="bg-light fc-white fs-12 fw-600 p-1 text-center"
+                      className="fc-white fs-12 fw-600 p-1 text-center"
                       style={{
                         position: "absolute",
                         top: -24,
                         left: -1,
                         right: -1,
                         textTransform: "uppercase",
+                        backgroundColor: "#01b6a0",
                       }}
                     >
                       Current Plan
@@ -184,11 +221,12 @@ const PlanPage: React.FC = () => {
                     <Button
                       className="mt-5 mb-3 mx-auto px-5"
                       onClick={() => {
-                        plan.route(appData.site.siteId);
+                        appData.site.siteId && plan.route(appData.site.siteId);
                       }}
                       style={{ width: "max-content" }}
+                      bgcolor={getButtonText(plan) === "Active" ? "#01b6a0" : undefined}
                     >
-                      Upgrade
+                      {getButtonText(plan)}
                     </Button>
 
                     {plan.features.map((item, index) => (
