@@ -1,10 +1,8 @@
 "use client";
-
 import { useState } from "react";
 import { useAppData } from "@/context/store";
 import { getDifferenceInDays } from "@/helper/getDifferenceInDays";
 import { Button, Segment, AppLink } from "@/custom";
-import CheckIcon from "@public/icons/check.svg";
 import ErrorIcon from "@public/icons/error.svg";
 import ArrowIcon from "@public/icons/arrow.svg";
 
@@ -75,11 +73,13 @@ const plans = [
   },
 ];
 
+type plan_types = "basic" | "essential" | "pinnacle" | "infinite";
+
 const PlanPage: React.FC = () => {
   const [appData] = useAppData();
   const [segment, setSegment] = useState("monthly");
 
-  const current_plan = appData.instance.billing?.packageName || "";
+  const current_plan = (appData.instance.billing?.packageName || "essential") as plan_types;
 
   const remaining_days =
     30 -
@@ -90,7 +90,7 @@ const PlanPage: React.FC = () => {
 
   return (
     <>
-      {remaining_days <= 0 && current_plan === "" ? (
+      {remaining_days <= 0 && current_plan === "basic" ? (
         <section
           style={{
             backgroundColor: "#fff4f4",
@@ -128,7 +128,7 @@ const PlanPage: React.FC = () => {
         </div>
 
         <Segment
-          className="mt-5 mx-auto"
+          className="mt-5 mb-10 mx-auto"
           value={segment}
           onChange={setSegment}
           options={[
@@ -149,7 +149,8 @@ const PlanPage: React.FC = () => {
                     borderRight: index === 3 ? "none" : "1px solid #dcdcdc",
                   }}
                 >
-                  {plan.id === current_plan ? (
+                  {plan.id === current_plan &&
+                  appData.instance.billing?.billingCycle === segment.toUpperCase() ? (
                     <div
                       className="bg-light fc-white fs-12 fw-600 p-1 text-center"
                       style={{
