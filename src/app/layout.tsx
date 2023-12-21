@@ -5,6 +5,7 @@ import type { Metadata } from "next";
 import StyledComponentsRegistry from "./registry";
 import { Signika_Negative } from "next/font/google";
 import AppHeader from "@/components/AppHeader";
+import AppProvider from "@/context/store";
 
 const Signika = Signika_Negative({
   weight: ["400", "500", "600", "700"],
@@ -24,10 +25,12 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="en">
       <body className={Signika.className}>
-        <StyledComponentsRegistry>
-          <AppHeader />
-          <main id="app-root">{children}</main>
-        </StyledComponentsRegistry>
+        <AppProvider>
+          <StyledComponentsRegistry>
+            <AppHeader />
+            <main id="app-root">{children}</main>
+          </StyledComponentsRegistry>
+        </AppProvider>
       </body>
     </html>
   );

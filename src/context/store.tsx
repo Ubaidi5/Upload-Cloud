@@ -1,7 +1,7 @@
 "use client";
 import React, { createContext, useState, useContext } from "react";
 
-type AppData = {
+export type AppData = {
   store: Partial<Store>;
   instance: Partial<Instance>;
   site: Partial<Site>;
