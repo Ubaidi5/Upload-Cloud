@@ -18,6 +18,7 @@ import ArrowIcon from "@public/icons/arrow.svg";
 import { APIS, errorHandler, useAPI } from "@/apis/config";
 import ResourcePicker from "@/components/Modal/ResourcePicker";
 import CancelIcon from "@public/icons/cancel.svg";
+import { useAppData } from "@/context/store";
 
 interface Props {
   editMode: boolean;
@@ -29,7 +30,8 @@ const Create: React.FC<Props> = (props) => {
   const { editMode = false, fieldId, field } = props;
 
   const router = useAppRouter();
-
+  const [appData] = useAppData();
+  console.log(appData);
   const [state, setState] = useState<
     Omit<
       Field,
@@ -79,11 +81,16 @@ const Create: React.FC<Props> = (props) => {
       if (editMode && fieldId) {
         body._id = fieldId;
       } else {
-        body.instanceId = "b563f0e9-aeee-4a86-a46a-4e918b37f1c3";
+        body.instanceId = appData.instance.instanceId;
       }
 
       const { data } = await create_field(body);
-      router.push("/");
+
+      if (editMode) {
+        message.success("Field updated successfully.");
+      } else {
+        router.push("/");
+      }
     } catch (err) {
       message.error(errorHandler(err));
     }
