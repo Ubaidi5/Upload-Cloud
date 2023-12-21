@@ -66,6 +66,13 @@ const Dashboard: React.FC<Props> = (props) => {
     }
   }, [appData.store]);
 
+  const TIER = {
+    basic: 1,
+    essential: 2,
+    pinnacle: 3,
+    infinite: 4,
+  }[`${appData.instance.billing?.packageName}`];
+
   return (
     <>
       <DeleteFieldModal
@@ -99,9 +106,10 @@ const Dashboard: React.FC<Props> = (props) => {
           <section className="w-[42 0px] p-5 rounded-xl flex justify-between gap-12 card">
             <div className="flex flex-col">
               <h1 className="fs-20 fw-600 fc-dark mb-3">Plan Summary</h1>
-              <p className="fc-dimm fs-13 mb-2">Tier 2</p>
+              <p className="fc-dimm fs-13 mb-2">Tier {TIER}</p>
               <h3 className="fs-28 fw-600" style={{ lineHeight: "28px", color: "#01b6a0" }}>
-                Essential plan
+                <span className="capitalize">{appData.instance.billing?.packageName}</span>{" "}
+                <span>plan</span>
               </h3>
               <Button className="mt-auto" outlined="true" color="#9F9FA5">
                 Upgrade
