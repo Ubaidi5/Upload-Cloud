@@ -12,7 +12,7 @@ export class StoreController {
   }
   //
   @Get('load')
-  async load_store(@Body() instanceId: string) {
+  async load_store(@Headers('X-InstanceId') instanceId: string) {
     // return this.storeService.load_store(instanceId);
     try {
       // get store
