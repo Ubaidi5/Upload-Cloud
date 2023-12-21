@@ -18,10 +18,27 @@ async function get_all_fields(instanceId: string) {
   }
 }
 
+async function load_store(instanceId: string) {
+  try {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/store/load`, {
+      method: "GET",
+      headers: { "X-InstanceId": instanceId },
+      cache: "no-store",
+    });
+
+    const data = await response.json();
+
+    return data;
+  } catch (err) {
+    console.log(err);
+    return { error: true };
+  }
+}
+
 async function Page(props: any) {
   const instanceId = getInstanceId(props.searchParams.instance);
 
-  const fields = await get_all_fields(instanceId);
+  const [fields, appData] = await Promise.all([get_all_fields(instanceId), load_store(instanceId)]);
 
   if (fields.error) {
     return (
@@ -34,7 +51,7 @@ async function Page(props: any) {
 
   return (
     <>
-      <Dashboard fields={fields} />
+      <Dashboard fields={fields} appData={appData} />
     </>
   );
 }

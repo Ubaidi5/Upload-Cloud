@@ -1,23 +1,35 @@
 "use client";
-import { MutableRefObject, useRef, useState } from "react";
+import { MutableRefObject, useEffect, useRef, useState } from "react";
 import { AppLink, Button, Switch, message } from "@/custom";
 import DonutPlot from "@/custom/DonutPlot";
 import Table from "@/custom/Table";
 import dynamic from "next/dynamic";
 import { APIS, errorHandler, useAPI } from "@/apis/config";
+import { useAppData, type AppData } from "@/context/store";
 
 const DeleteFieldModal = dynamic(() => import("@/components/Modal/DeleteFieldModal"));
 
 interface Props {
   fields: Array<Field>;
+  appData: AppData;
 }
 
 const Dashboard: React.FC<Props> = (props) => {
-  const { fields } = props;
+  const { fields, appData } = props;
+
+  const [_, setAppData] = useAppData(); // Setting app data on context
+
+  const uploadField = useRef() as MutableRefObject<Field>; // Store the current Field when updating, deleting or switching status.
+
+  /**
+   * States
+   */
   const [allFields, setAllFields] = useState(fields);
   const [delteModal, toggleDeleteModal] = useState(false);
-  const uploadField = useRef() as MutableRefObject<Field>; // Add field type here
 
+  /**
+   * APIs
+   */
   const [update_field, update_loading] = useAPI(APIS.update_field);
   const [delete_field, delete_loading] = useAPI(APIS.delete_field);
 
@@ -43,6 +55,16 @@ const Dashboard: React.FC<Props> = (props) => {
       message.error(errorHandler(err));
     }
   }
+
+  useEffect(() => {
+    setAppData(appData);
+    /**
+     * Setting refresh token in local storage to attach it to API headers in index file
+     */
+    if (appData.store) {
+      localStorage.setItem("__UC_refresh_token", `${appData.store.refreshToken}`);
+    }
+  }, [appData.store]);
 
   return (
     <>
@@ -108,22 +130,26 @@ const Dashboard: React.FC<Props> = (props) => {
             {
               title: "Field name",
               data: (data: Field) => <p>{data.fieldName}</p>,
-              expandItem: (c) =>
-                c === 2 ? undefined : (
-                  <>
-                    <h1 className="mb-3 mt-2">Selected Products</h1>
-                    <div className="flex items-center flex-wrap gap-2">
-                      {[1, 2, 3, 4, 5, 6, 1, 2, 3, 4, 5, 6].map((item, index) => (
-                        <span
-                          key={index}
-                          style={{ backgroundColor: "#ececec", padding: 6, borderRadius: 4 }}
-                        >
-                          Polca dots Shirt
-                        </span>
-                      ))}
-                    </div>
-                  </>
-                ),
+              expandItem: (data: Field) => {
+                const selectedItems: { name: string; id: string }[] = JSON.parse(data.selectedItems);
+                if (selectedItems.length) {
+                  return (
+                    <>
+                      <h1 className="mb-3 mt-2">Selected Products</h1>
+                      <div className="flex items-center flex-wrap gap-2">
+                        {selectedItems.map((item, index) => (
+                          <span
+                            key={index}
+                            style={{ backgroundColor: "#ececec", padding: 6, borderRadius: 4 }}
+                          >
+                            {item.name}
+                          </span>
+                        ))}
+                      </div>
+                    </>
+                  );
+                }
+              },
             },
             {
               title: "Uploads",
