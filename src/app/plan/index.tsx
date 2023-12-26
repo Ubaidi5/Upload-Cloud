@@ -1,9 +1,7 @@
 "use client";
 import { useEffect, useState } from "react";
 import { useAppData } from "@/context/store";
-import { getDifferenceInDays } from "@/helper/getDifferenceInDays";
 import { Button, Segment, AppLink } from "@/custom";
-import ErrorIcon from "@public/icons/error.svg";
 import ArrowIcon from "@public/icons/arrow.svg";
 
 type plan_types = "basic" | "essential" | "pinnacle" | "infinite";
@@ -90,13 +88,6 @@ const PlanPage: React.FC = () => {
 
   const current_plan = (appData.instance.billing?.packageName || "basic") as plan_types;
 
-  const remaining_days =
-    30 -
-    getDifferenceInDays(
-      new Date(appData.store?.installedAt || new Date()).getTime(),
-      new Date().getTime()
-    );
-
   function getButtonText(plan: Plan) {
     const int_value = {
       basic: 1,
@@ -124,36 +115,17 @@ const PlanPage: React.FC = () => {
 
   return (
     <>
-      {remaining_days <= 0 && current_plan === "basic" ? (
-        <section
-          style={{
-            backgroundColor: "#fff4f4",
-            border: "1px solid #e0b3b2",
-            borderRadius: 6,
-          }}
-          className="mb-2 p-3"
-        >
-          <div className="flex">
-            <ErrorIcon className="mr-2" />
-            <div>
-              <p style={{ fontSize: 16, fontWeight: 600 }}>Trial expired please upgrade</p>
-              <p className="m-0">Please choose a paid plan</p>
-            </div>
-          </div>
-        </section>
-      ) : (
-        <AppLink href="/">
-          <div className="mb-2 flex items-center gap-3">
-            <span
-              style={{ width: 28, height: 28, borderRadius: 4, border: "1px solid #dcdcdc" }}
-              className="flex items-center justify-center"
-            >
-              <ArrowIcon style={{ width: 12, rotate: "-90deg", color: "#797979" }} />
-            </span>
-            <p className="m-0">Back</p>
-          </div>
-        </AppLink>
-      )}
+      <AppLink href="/">
+        <div className="mb-2 flex items-center gap-3">
+          <span
+            style={{ width: 28, height: 28, borderRadius: 4, border: "1px solid #dcdcdc" }}
+            className="flex items-center justify-center"
+          >
+            <ArrowIcon style={{ width: 12, rotate: "-90deg", color: "#797979" }} />
+          </span>
+          <p className="m-0">Back</p>
+        </div>
+      </AppLink>
 
       <div className="card p-5 bg-white">
         <div className="text-center">
