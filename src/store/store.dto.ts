@@ -19,3 +19,11 @@ export class GetProductDto {
   @IsOptional()
   search: string;
 }
+
+export class GetProductByIdDto {
+  @IsString()
+  instanceId: string;
+
+  @IsString()
+  id: string;
+}

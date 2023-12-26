@@ -15,6 +15,11 @@ export class FieldController {
     }
   }
 
+  @Post('/current')
+  get_current_field(@Body() body: { productId: string; instanceId: string }) {
+    return this.fieldService.get_current_field(body);
+  }
+
   @Post('')
   create_field(@Body() body: FieldDto) {
     return this.fieldService.create_field(body);

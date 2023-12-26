@@ -29,6 +29,38 @@ export class FieldService {
     }
   }
 
+  async get_current_field(body: { instanceId: string; productId: string }) {
+    try {
+      // const fields = await this.db.fields.find({
+      //   instanceId: body.instanceId,
+      //   selectedItems: {
+      //     $regex: body.productId,
+      //     $options: 'i',
+      //   },
+      // });
+
+      const fields = await this.db.fields.find({ instanceId: body.instanceId }).lean();
+
+      const currentField = fields.find((field) => {
+        if (field.targeting === 'all' && !field.selectedItems.includes(body.productId)) {
+          return true;
+        } else if (field.selectedItems.includes(body.productId)) {
+          return true;
+        } else {
+          return false;
+        }
+      });
+
+      if (currentField) {
+        return currentField;
+      } else {
+        return { status: 404 };
+      }
+    } catch (err) {
+      throw new BadRequestException(err);
+    }
+  }
+
   async create_field(args: FieldDto) {
     try {
       const field = new this.db.fields(args);

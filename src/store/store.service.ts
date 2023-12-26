@@ -2,7 +2,7 @@ import { BadRequestException, Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { DBService } from 'src/db/db.service';
 import axios from 'axios';
-import { GetProductDto } from './store.dto';
+import { GetProductByIdDto, GetProductDto } from './store.dto';
 
 @Injectable()
 export class StoreService {
@@ -111,6 +111,28 @@ export class StoreService {
           // includeVariants: false,
           // includeHiddenProducts: false,
           // includeMerchantSpecificData: false,
+        },
+        {
+          headers: {
+            Authorization: access_token,
+          },
+        },
+      );
+
+      return data;
+    } catch (err) {
+      throw new BadRequestException(err);
+    }
+  }
+
+  async get_product_by_id(body: GetProductByIdDto, access_token: string) {
+    try {
+      const { data } = await axios.post(
+        `https://www.wixapis.com/stores/v1/products/query`,
+        {
+          query: {
+            filter: `{"id": "${body.id}" }`,
+          },
         },
         {
           headers: {
