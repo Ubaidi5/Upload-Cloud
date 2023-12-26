@@ -31,7 +31,7 @@ const Create: React.FC<Props> = (props) => {
 
   const router = useAppRouter();
   const [appData] = useAppData();
-  console.log(appData);
+
   const [state, setState] = useState<
     Omit<
       Field,
@@ -97,7 +97,6 @@ const Create: React.FC<Props> = (props) => {
   }
 
   useEffect(() => {
-    console.log(props);
     if (editMode && field) {
       setState(field);
       setSelectedItems(JSON.parse(field.selectedItems));
@@ -544,9 +543,7 @@ const Create: React.FC<Props> = (props) => {
               <div id="field-preview">
                 <p className="field-label fw-500">{state.labelText}</p>
                 {state.previewStyle === "button" ? (
-                  <button className="upload-button py-2 px-4 my-1">
-                    {state.buttonText || "Choose file"}
-                  </button>
+                  <button className="upload-button my-1">{state.buttonText || "Choose file"}</button>
                 ) : (
                   <div
                     className="upload-button my-1 p-3 rounded text-center"

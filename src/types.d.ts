@@ -1,7 +1,8 @@
 interface Store {
   _id: string;
   siteUrl: string;
-  installedAt: string;
+  createdAt: string;
+  updatedAt: string;
   instanceId: string;
   refreshToken: string;
 }
@@ -36,15 +37,6 @@ interface Site {
   url: string;
   installedWixApps: Array<string>;
   siteId: string;
-}
-
-interface Window {
-  Wix: {
-    Utils: {
-      getInstanceId: () => string;
-      getViewMode: () => "dashboard" | "standalone" | "editor";
-    };
-  };
 }
 
 interface Field {
