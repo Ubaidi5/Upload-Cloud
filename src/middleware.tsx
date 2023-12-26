@@ -13,10 +13,7 @@ export async function middleware(request: NextRequest) {
     const token = request.nextUrl.searchParams.get("token");
     const appId = process.env.NEXT_PUBLIC_APP_ID;
 
-    const redirect_url =
-      process.env.NODE_ENV === "development"
-        ? "https://upload-cloud.loca.lt/install"
-        : `${process.env.NEXT_PUBLIC_BACKEND_URL}/install`;
+    const redirect_url = `${process.env.NEXT_PUBLIC_BACKEND_URL}/install`;
 
     return NextResponse.redirect(
       `https://www.wix.com/installer/install?token=${token}&appId=${appId}&redirectUrl=${redirect_url}`
