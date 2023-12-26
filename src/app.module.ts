@@ -5,7 +5,7 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { ConfigModule } from '@nestjs/config';
 
 const mongo_url =
-  'mongodb://ubaid-admin:dbc7a8832c7447118e25d0ee49ecd168@localhost:28185/upload-field';
+  'mongodb://ubaid-admin:dbc7a8832c7447118e25d0ee49ecd168@localhost:28185/upload-field?authSource=admin';
 
 @Module({
   imports: [
