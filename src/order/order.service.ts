@@ -1,12 +1,11 @@
+import { Injectable } from '@nestjs/common';
 import { GetObjectCommand, PutObjectCommand, S3Client } from '@aws-sdk/client-s3';
-import { BadRequestException, Injectable, UploadedFile, UseInterceptors } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { FileInterceptor } from '@nestjs/platform-express';
 import { DBService } from 'src/db/db.service';
 import { CreateOrderDto } from './Order.dto';
-// AWS_ACCESS_KEY_ID
-// AWS_ACCESS_KEY_SECRET
-// AWS_S3_REGION
+import { StoreService } from 'src/store/store.service';
+import axios from 'axios';
+
 @Injectable()
 export class OrderService {
   private readonly s3Client = new S3Client({
@@ -15,11 +14,28 @@ export class OrderService {
   constructor(
     private db: DBService,
     private config: ConfigService,
+    private storeService: StoreService,
   ) {}
 
   async createOrder(body: Partial<CreateOrderDto>) {
     const order = new this.db.order(body);
-    order.save();
+    await order.save();
+
+    const store = await this.db.stores.findOne({ instanceId: body.instanceId }).lean();
+
+    const access_token = await this.storeService.get_access_token(store.refreshToken);
+
+    const { data } = await axios.get(`https://www.wixapis.com/stores/v2/orders/${body.orderId}`, {
+      headers: {
+        Authorization: access_token,
+      },
+    });
+
+    console.log(data);
+
+    order.orderNumber = data.order.number;
+
+    await order.save();
 
     return order;
   }
@@ -34,10 +50,6 @@ export class OrderService {
     );
 
     return data;
-    // try {
-    // } catch (err) {
-    //   throw new BadRequestException(err);
-    // }
   }
 
   async getImage(fileName: string, cb: (err: any, data: any) => any) {
@@ -49,4 +61,23 @@ export class OrderService {
       cb,
     );
   }
+
+  // private public_key = `-----BEGIN PUBLIC KEY-----
+  // MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAkXNw04jMuANLBAwNvULm
+  // dm+R9zD8ForzliMkTT23xAx/ppdbrkZMXXAM48mJdvqVKsDPgCafhZjQuVeqkm+3
+  // /F80I5jOQkQymIx7JSDjUcuA+7p5NewPf5J3mMwU3Ghk6n8oW0w1Ji0pwCYGP3zm
+  // c/J6m6rxbCVnAT//itOneEc1qCow4av87RUKszIoY1URQdJUq8B7zSD+Us4wp4Me
+  // fdGTW+qMdnDZHG8WlnV5smtkJWsrY9XocYsX+AtkCFu1o5c4XSdr6ON/FF6E2eGP
+  // mFvFT20SZ1S171qxEsk5uD+T1B1v8OiFse9PUis4Y+foBPIOJWpumpUnkOxr/134
+  // IwIDAQAB
+  // -----END PUBLIC KEY-----`;
+  // webhook(jwt: string) {
+  //   const result: any = jwtDecode(jwt);
+
+  //   const parsedData = JSON.parse(result.data);
+
+  //   const payload = JSON.parse(parsedData.data);
+
+  //   return { instanceId: parsedData.instanceId, eventType: parsedData.eventType, ...payload };
+  // }
 }

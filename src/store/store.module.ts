@@ -7,6 +7,7 @@ import { DBModule } from 'src/db/db.module';
   imports: [DBModule],
   controllers: [StoreController],
   providers: [StoreService],
+  exports: [StoreService],
 })
 export class StoreModule {
   constructor() {}

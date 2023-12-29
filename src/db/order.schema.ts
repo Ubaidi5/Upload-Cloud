@@ -12,13 +12,16 @@ export class Order {
   @Prop()
   sessionId: string;
 
+  @Prop()
+  orderId: string;
+
   @IsOptional()
   @Prop()
   customerName: string;
 
   @IsOptional()
   @Prop()
-  orderNumber: string;
+  orderNumber: number;
 }
 
 export const OrderSchema = SchemaFactory.createForClass(Order);

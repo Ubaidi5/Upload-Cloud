@@ -51,7 +51,7 @@ export class StoreService {
     return await this.db.stores.findOne({ instanceId: instanceId });
   }
 
-  async get_access_token(refreshToken: string) {
+  async get_access_token(refreshToken: string): Promise<string> {
     try {
       const body = {
         grant_type: 'refresh_token',

@@ -5,14 +5,11 @@ export class CreateOrderDto {
   instanceId: string;
 
   @IsString()
-  @IsOptional()
-  productName: string;
+  orderId: string;
 
   @IsString()
-  @IsOptional()
   data: string;
 
   @IsString()
-  @IsOptional()
   sessionId: string;
 }

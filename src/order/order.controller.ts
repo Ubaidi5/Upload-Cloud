@@ -51,4 +51,24 @@ export class OrderController {
       });
     });
   }
+
+  // @Post('webhook')
+  // async webhook(@Body() body: any, @Req() req: any) {
+  //   const payload = this.orderService.webhook(req.digest);
+  //   console.log('DATA:---->', payload);
+
+  //   const store = await this.db.stores.findOne({ instanceId: payload.instanceId }).lean();
+  //   console.log('Store:---->', store);
+
+  //   const access_token = await this.storeService.get_access_token(store.refreshToken);
+  //   console.log('access_token:---->', access_token);
+
+  //   const { data } = await axios.get(`https://www.wixapis.com/stores/v2/orders/${payload.orderId}`, {
+  //     headers: {
+  //       Authorization: access_token,
+  //     },
+  //   });
+
+  //   console.log(data);
+  // }
 }
