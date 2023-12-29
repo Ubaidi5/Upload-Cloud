@@ -34,6 +34,7 @@ export class OrderService {
     console.log(data);
 
     order.orderNumber = data.order.number;
+    order.lineItems = JSON.stringify(data.order.lineItems);
 
     await order.save();
 

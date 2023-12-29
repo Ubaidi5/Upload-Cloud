@@ -3,7 +3,7 @@ import { DBService } from './db.service';
 import { MongooseModule } from '@nestjs/mongoose';
 import { Field, FieldSchema } from './fields.schema';
 import { Store, StoreSchema } from './stores.schema';
-import { Order, OrderSchema } from './order.schema';
+import { Order, OrderSchema } from './orders.schema';
 
 @Global()
 @Module({
