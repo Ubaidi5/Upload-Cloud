@@ -3,6 +3,7 @@ import { DBService } from './db.service';
 import { MongooseModule } from '@nestjs/mongoose';
 import { Field, FieldSchema } from './fields.schema';
 import { Store, StoreSchema } from './stores.schema';
+import { Order, OrderSchema } from './order.schema';
 
 @Global()
 @Module({
@@ -10,6 +11,7 @@ import { Store, StoreSchema } from './stores.schema';
     MongooseModule.forFeature([
       { name: Store.name, schema: StoreSchema },
       { name: Field.name, schema: FieldSchema },
+      { name: Order.name, schema: OrderSchema },
     ]),
   ],
   providers: [DBService],
