@@ -1,15 +1,18 @@
-import { IsArray, IsString } from 'class-validator';
+import { IsArray, IsOptional, IsString } from 'class-validator';
 
 export class CreateOrderDto {
   @IsString()
   instanceId: string;
 
   @IsString()
+  @IsOptional()
   productName: string;
 
-  @IsArray()
-  images: string[];
+  @IsString()
+  @IsOptional()
+  data: string;
 
   @IsString()
+  @IsOptional()
   sessionId: string;
 }
