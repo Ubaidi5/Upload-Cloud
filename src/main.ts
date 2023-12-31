@@ -1,8 +1,7 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { ValidationPipe } from '@nestjs/common';
-// import { urlencoded, json } from 'express';
-// import * as bodyParser from 'body-parser';
+import { urlencoded, json } from 'express';
 import { NestExpressApplication } from '@nestjs/platform-express';
 
 async function bootstrap() {
@@ -10,14 +9,8 @@ async function bootstrap() {
   app.setGlobalPrefix('api');
   app.useGlobalPipes(new ValidationPipe({ whitelist: true }));
 
-  // app.use(json({ limit: '50mb' }));
-  // app.use(urlencoded({ extended: true, limit: '50mb' }));
-  // app.use(bodyParser.json({ limit: '50mb' }));
-  // app.use(bodyParser.urlencoded({ limit: '50mb', extended: true }));
-  // app.use(bodyParser.raw({ limit: '50mb' }));
-  app.useBodyParser('urlencoded', { limit: '50mb' });
-  app.useBodyParser('text', { limit: '50mb' });
-  app.useBodyParser('raw', { limit: '50mb' });
+  app.use(json({ limit: '50mb' }));
+  app.use(urlencoded({ extended: true, limit: '50mb' }));
 
   app.use(function (req, res, next) {
     if (!req.path.includes('webhook')) {
