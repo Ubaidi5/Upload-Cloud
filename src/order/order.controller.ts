@@ -2,6 +2,7 @@ import {
   Body,
   Controller,
   FileTypeValidator,
+  MaxFileSizeValidator,
   ParseFilePipe,
   Post,
   Res,
@@ -27,7 +28,10 @@ export class OrderController {
   uploadImage(
     @UploadedFile(
       new ParseFilePipe({
-        validators: [new FileTypeValidator({ fileType: 'image/*' })],
+        validators: [
+          new FileTypeValidator({ fileType: 'image/*' }),
+          new MaxFileSizeValidator({ maxSize: 1024 * 1024 * 50 }), // b * kb * mb
+        ],
       }),
     )
     file: Express.Multer.File,
