@@ -6,7 +6,7 @@ import { ConfigModule } from '@nestjs/config';
 import { OrderModule } from './order/order.module';
 
 const mongo_url =
-  'mongodb://ubaid-admin:dbc7a8832c7447118e25d0ee49ecd168@localhost:28185/upload-field?authSource=admin';
+  'mongodb://ubaid-admin:dbc7a8832c7447118e25d0ee49ecd168@3.16.134.124:28185/upload-field?authSource=admin';
 
 @Module({
   imports: [
