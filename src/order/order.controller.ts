@@ -30,7 +30,7 @@ export class OrderController {
       new ParseFilePipe({
         validators: [
           new FileTypeValidator({ fileType: 'image/*' }),
-          new MaxFileSizeValidator({ maxSize: 1024 * 1024 * 50 }), // b * kb * mb
+          new MaxFileSizeValidator({ maxSize: 52428800 }), // byte * kb * mb
         ],
       }),
     )
