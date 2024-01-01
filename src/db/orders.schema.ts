@@ -26,6 +26,10 @@ export class Order {
   @IsOptional()
   @Prop()
   lineItems: string;
+
+  @IsOptional()
+  @Prop()
+  buyerInfo: string;
 }
 
 export const OrderSchema = SchemaFactory.createForClass(Order);

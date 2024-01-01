@@ -17,6 +17,11 @@ export class OrderService {
     private storeService: StoreService,
   ) {}
 
+  async getStoreOrders(instanceId: string) {
+    const orders = this.db.order.find({ instanceId: instanceId });
+    return orders;
+  }
+
   async createOrder(body: Partial<CreateOrderDto>) {
     const order = new this.db.order(body);
     await order.save();
@@ -35,6 +40,7 @@ export class OrderService {
 
     order.orderNumber = data.order.number;
     order.lineItems = JSON.stringify(data.order.lineItems);
+    order.buyerInfo = JSON.stringify(data.order.buyerInfo);
 
     await order.save();
 
