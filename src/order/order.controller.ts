@@ -1,9 +1,11 @@
 import {
-  Body,
   Controller,
   FileTypeValidator,
   MaxFileSizeValidator,
   ParseFilePipe,
+  Body,
+  Headers,
+  Get,
   Post,
   Res,
   UploadedFile,
@@ -17,6 +19,11 @@ import { CreateOrderDto } from './Order.dto';
 @Controller('order')
 export class OrderController {
   constructor(private orderService: OrderService) {}
+
+  @Get()
+  getStoreOrders(@Headers('X-InstanceId') instanceId: string) {
+    return this.orderService.getStoreOrders(instanceId);
+  }
 
   @Post('')
   createOrder(@Body() body: CreateOrderDto) {
