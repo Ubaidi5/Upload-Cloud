@@ -30,6 +30,9 @@ const APIS = {
   delete_field: (params: any) => {
     return baseURL.delete("/field", { params });
   },
+  duplicate_field: (body: { fieldId: string }) => {
+    return baseURL.post("/field/duplicate", body);
+  },
   get_products: (body: { limit: number; offset: number; type: string }) => {
     const headers = getHeaders();
     return baseURL.post("/store/products", body, { headers });

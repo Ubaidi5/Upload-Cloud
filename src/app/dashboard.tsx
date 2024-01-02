@@ -1,6 +1,6 @@
 "use client";
 import { MutableRefObject, useEffect, useRef, useState } from "react";
-import { AppLink, Button, Switch, message } from "@/custom";
+import { AppLink, Button, Spinner, Switch, message } from "@/custom";
 import DonutPlot from "@/custom/DonutPlot";
 import Table from "@/custom/Table";
 import dynamic from "next/dynamic";
@@ -12,10 +12,12 @@ const DeleteFieldModal = dynamic(() => import("@/components/Modal/DeleteFieldMod
 interface Props {
   fields: Array<Field>;
   appData: AppData;
+  total_uploads: number;
 }
 
 const Dashboard: React.FC<Props> = (props) => {
-  const { fields, appData } = props;
+  const { fields, appData, total_uploads } = props;
+  console.log(appData);
 
   const [_, setAppData] = useAppData(); // Setting app data on context
 
@@ -32,6 +34,7 @@ const Dashboard: React.FC<Props> = (props) => {
    */
   const [update_field, update_loading] = useAPI(APIS.update_field);
   const [delete_field, delete_loading] = useAPI(APIS.delete_field);
+  const [duplicate_field, duplicate_loading] = useAPI(APIS.duplicate_field);
 
   async function updateField(enabled: boolean) {
     try {
@@ -56,6 +59,17 @@ const Dashboard: React.FC<Props> = (props) => {
     }
   }
 
+  async function duplicateField() {
+    try {
+      const { data } = await duplicate_field({ fieldId: uploadField.current._id });
+
+      allFields.push(data);
+      setAllFields([...allFields]);
+    } catch (err) {
+      message.error(errorHandler(err));
+    }
+  }
+
   useEffect(() => {
     setAppData(appData);
     /**
@@ -66,12 +80,28 @@ const Dashboard: React.FC<Props> = (props) => {
     }
   }, [appData.store]);
 
-  const TIER = {
-    basic: 1,
-    essential: 2,
-    pinnacle: 3,
-    infinite: 4,
-  }[`${appData.instance.billing?.packageName}`];
+  const plan = {
+    basic: {
+      tier: 1,
+      name: "Basic",
+      uploads: "50",
+    },
+    essential: {
+      tier: 2,
+      name: "Essential",
+      uploads: "500",
+    },
+    pinnacle: {
+      tier: 3,
+      name: "Pinnacle",
+      uploads: "2,000",
+    },
+    infinite: {
+      tier: 4,
+      name: "Infinite",
+      uploads: Infinity,
+    },
+  }[appData.instance.billing?.packageName || "basic"];
 
   return (
     <>
@@ -91,13 +121,13 @@ const Dashboard: React.FC<Props> = (props) => {
               <div>
                 <p className="fc-dimm fs-13 mb-2">Uploads used</p>
                 <h3 className="fs-28 fw-600" style={{ lineHeight: "28px", color: "#01b6a0" }}>
-                  587
+                  {total_uploads}
                 </h3>
               </div>
               <div>
                 <p className="fc-dimm fs-13 mb-2">Remaining Uploads</p>
                 <h3 className="fs-28 fw-600" style={{ lineHeight: "28px", color: "#01b6a0" }}>
-                  1413
+                  {Number(plan?.uploads) - total_uploads}
                 </h3>
               </div>
             </div>
@@ -106,10 +136,9 @@ const Dashboard: React.FC<Props> = (props) => {
           <section className="w-[42 0px] p-5 rounded-xl flex justify-between gap-12 card">
             <div className="flex flex-col">
               <h1 className="fs-20 fw-600 fc-dark mb-3">Plan Summary</h1>
-              <p className="fc-dimm fs-13 mb-2">Tier {TIER}</p>
+              <p className="fc-dimm fs-13 mb-2">Tier {plan?.tier}</p>
               <h3 className="fs-28 fw-600" style={{ lineHeight: "28px", color: "#01b6a0" }}>
-                <span className="capitalize">{appData.instance.billing?.packageName}</span>{" "}
-                <span>plan</span>
+                <span className="capitalize">{plan?.name}</span> <span>plan</span>
               </h3>
               <Button className="mt-auto" outlined="true" color="#9F9FA5">
                 Upgrade
@@ -117,7 +146,7 @@ const Dashboard: React.FC<Props> = (props) => {
             </div>
 
             <div>
-              <DonutPlot size={120} />
+              <DonutPlot size={120} used={total_uploads} total={Number(plan?.uploads)} />
               <p className="text-center fc-white">Usage</p>
             </div>
           </section>
@@ -132,7 +161,7 @@ const Dashboard: React.FC<Props> = (props) => {
         </div>
 
         <Table
-          data={fields}
+          data={allFields}
           pagination={false}
           columns={[
             {
@@ -159,10 +188,10 @@ const Dashboard: React.FC<Props> = (props) => {
                 }
               },
             },
-            {
-              title: "Uploads",
-              data: <p>34</p>,
-            },
+            // {
+            //   title: "Uploads",
+            //   data: (field: Ext) => <p>{field.uploads}</p>,
+            // },
             {
               title: "Targetting",
               data: (field: Field) => (
@@ -208,7 +237,17 @@ const Dashboard: React.FC<Props> = (props) => {
                   >
                     Delete
                   </div>
-                  <div className="action-button duplicate">Duplicate</div>
+                  <div
+                    className="action-button duplicate flex items-center gap-1"
+                    onClick={() => {
+                      uploadField.current = field;
+                      duplicateField();
+                    }}
+                    tabIndex={1}
+                  >
+                    {duplicate_loading ? <Spinner color="#fff" /> : null}
+                    <span>Duplicate</span>
+                  </div>
                 </div>
               ),
               width: 380,
@@ -218,40 +257,40 @@ const Dashboard: React.FC<Props> = (props) => {
 
         <style>
           {`
-          .action-button {
-            padding: 4px 8px;
-            min-width: 64px;
-            border: 1px solid #1e1e2c;
-            border-radius: 4px;
-            color: #1e1e2c;
-            cursor: pointer;
-            text-align: center;
-            transition: 0.2s;
-          }
+            .action-button {
+              padding: 4px 8px;
+              min-width: 64px;
+              border: 1px solid #1e1e2c;
+              border-radius: 4px;
+              color: #1e1e2c;
+              cursor: pointer;
+              text-align: center;
+              transition: 0.2s;
+            }
 
-          .edit:hover{
-            background-color: #1e1e2c;
-            color: #fff;
-          }
+            .edit:hover {
+              background-color: #1e1e2c;
+              color: #fff;
+            }
 
-          .delete {
-            border-color: #f95f53;
-            color: #f95f53;
-          }
-          .delete:hover {
-            background-color: #f95f53;
-            color: #fff;
-          }
+            .delete {
+              border-color: #f95f53;
+              color: #f95f53;
+            }
+            .delete:hover {
+              background-color: #f95f53;
+              color: #fff;
+            }
 
-          .duplicate {
-            border-color: #6338FA;
-            color: #6338FA;
-          }
-          .duplicate:hover {
-            background-color: #6338FA;
-            color: #fff;
-          }
-        `}
+            .duplicate {
+              border-color: #6338fa;
+              color: #6338fa;
+            }
+            .duplicate:hover {
+              background-color: #6338fa;
+              color: #fff;
+            }
+          `}
         </style>
       </div>
     </>
