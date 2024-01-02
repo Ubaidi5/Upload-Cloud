@@ -48,32 +48,19 @@ const Uploads: React.FC<Props> = (props) => {
       ) : null}
 
       <div className="py-8">
-        <Button bgcolor="#1e1e2c" className="my-5">
+        {/* <Button bgcolor="#1e1e2c" className="my-5">
           Refresh files
-        </Button>
+        </Button> */}
         <Table
           data={orders}
           columns={[
             {
               title: "Order",
               data: (data: Order) => <p>#{data.orderNumber}</p>,
-              // expandItem: (c) =>
-              //   c === 2 ? undefined : (
-              //     <>
-              //       <h1 className="mb-3 mt-2">Selected Products</h1>
-              //       <div className="flex items-center flex-wrap gap-2">
-              //         {[1, 2, 3, 4, 5, 6, 1, 2, 3, 4, 5, 6].map((item) => (
-              //           <span style={{ backgroundColor: "#ececec", padding: 6, borderRadius: 4 }}>
-              //             Polca dots Shirt
-              //           </span>
-              //         ))}
-              //       </div>
-              //     </>
-              //   ),
-              width: 120,
+              width: 100,
             },
             {
-              title: "Product",
+              title: "Products",
               data: (order: Order) => {
                 const data: Array<product_options_type> = JSON.parse(order.data);
 

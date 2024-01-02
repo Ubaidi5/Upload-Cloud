@@ -43,7 +43,7 @@ const Table: React.FC<Props> = (props) => {
   return (
     <>
       <StyledTable>
-        <div className="top-bar">
+        {/* <div className="top-bar">
           <input
             style={{
               border: "none",
@@ -54,7 +54,7 @@ const Table: React.FC<Props> = (props) => {
             }}
             placeholder="Search"
           />
-        </div>
+        </div> */}
 
         <div className="my-table">
           <div className="table-head" style={{ display: "grid", gridTemplateColumns }}>
