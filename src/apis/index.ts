@@ -41,7 +41,7 @@ const APIS = {
       body: JSON.stringify(body),
     };
 
-    return fetch("http://localhost:3002/api/order/image", requestOptions);
+    return fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/order/image`, requestOptions);
   },
 };
 
