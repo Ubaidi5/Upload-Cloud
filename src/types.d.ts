@@ -88,6 +88,8 @@ interface Order {
   instanceId: string;
 }
 
+type option_type = { title: string; value: string };
+
 interface product_options_type {
   name: string;
   images: string[];
@@ -114,7 +116,7 @@ interface LineItem {
   totalPrice: string;
   lineItemType: string;
   options: Array<{ option: string; selection: string }>;
-  customTextFields: [];
+  customTextFields: Array<{ title: string; value: string }>;
   mediaItem: {
     mediaType: string;
     url: string;

@@ -1,6 +1,8 @@
 import { Button, Modal } from "@/custom";
 import { dateFormatter } from "@/helper/dateFormatter";
+import { isEqual } from "@/helper/isEqual";
 import styled from "styled-components";
+import UCImage from "../UCImage";
 
 interface Props {
   open: boolean;
@@ -12,14 +14,14 @@ const OrderDetailsModal: React.FC<Props> = (props) => {
   const { open, onCancel, order } = props;
 
   const lineItems: Array<LineItem> = JSON.parse(order.lineItems);
-
+  const data: Array<product_options_type> = JSON.parse(order.data);
   const buyerInfo: BuyerInfo = JSON.parse(order.buyerInfo);
 
   return (
     <StyledModal open={open} onCancel={onCancel}>
       <div className="flex justify-between">
         <section>
-          <h1>Order #{order.orderNumber}</h1>
+          <h1 className="fc-light fs-24">Order #{order.orderNumber}</h1>
           <p>Placed on {dateFormatter(order.createdAt)}</p>
           <p>Items ({lineItems.length})</p>
         </section>
@@ -39,11 +41,30 @@ const OrderDetailsModal: React.FC<Props> = (props) => {
       </div>
 
       <div>
-        {lineItems.map((lineItem) => {
-          const data = {};
+        {lineItems.map((lineItem, index) => {
+          const obj1: any = {}; // this object hold data from line items that comes from the order
+          const obj2: any = {}; // This object hold data from selected variants that comes from the app
+
+          lineItem.customTextFields.forEach((ctf) => {
+            obj1[ctf.title] = ctf.value;
+          });
+          lineItem.options.forEach((opt) => {
+            obj1[opt.option] = opt.selection;
+          });
+
+          const currentField = data.find((d) => {
+            d.selected_variants.forEach((v) => (obj2[v.title] = v.value));
+
+            const isMatched = isEqual(obj1, obj2);
+
+            if (lineItem.name === d.name && isMatched) {
+              return true;
+            }
+            return false;
+          });
 
           return (
-            <div className="line-item flex">
+            <div key={index} className="line-item flex">
               <section className="flex items-center gap-2 flex-1">
                 <img className="product-image" src={lineItem.mediaItem.url} />
                 <div>
@@ -52,15 +73,21 @@ const OrderDetailsModal: React.FC<Props> = (props) => {
                 </div>
               </section>
 
-              <section className="flex-1">
-                <p>Images will be shown here</p>
+              <section className="flex-1 flex gap-4">
+                {currentField &&
+                  currentField.images.map((imageId) => (
+                    <UCImage key={imageId} imageId={imageId} orderNumber={order.orderNumber} />
+                  ))}
               </section>
             </div>
           );
         })}
       </div>
 
-      <Button style={{ marginLeft: "auto", width: 100 }} onClick={onCancel}>
+      <Button
+        style={{ marginInline: "auto", width: 150, marginTop: 16, height: 60 }}
+        onClick={onCancel}
+      >
         Close
       </Button>
     </StyledModal>

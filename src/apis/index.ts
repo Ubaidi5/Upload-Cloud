@@ -34,6 +34,15 @@ const APIS = {
     const headers = getHeaders();
     return baseURL.post("/store/products", body, { headers });
   },
+  get_image: (body: { fileName: string }) => {
+    const requestOptions = {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(body),
+    };
+
+    return fetch("http://localhost:3002/api/order/image", requestOptions);
+  },
 };
 
 export default APIS;
