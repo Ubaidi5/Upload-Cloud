@@ -5,7 +5,7 @@ async function get_all_fields(instanceId: string) {
   try {
     const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/field`, {
       method: "GET",
-      headers: { "X-InstanceId": instanceId },
+      headers: { "X-InstanceId": instanceId, "Content-Type": "application/json" },
       cache: "no-store",
     });
 
@@ -35,10 +35,29 @@ async function load_store(instanceId: string) {
   }
 }
 
+async function get_store_orders(instanceId: string) {
+  try {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/order`, {
+      method: "GET",
+      headers: { "X-InstanceId": instanceId },
+      cache: "no-store",
+    });
+
+    const data = await response.json();
+    return data;
+  } catch (err) {
+    return { error: true };
+  }
+}
+
 async function Page(props: any) {
   const instanceId = getInstanceId(props.searchParams.instance);
 
-  const [fields, appData] = await Promise.all([get_all_fields(instanceId), load_store(instanceId)]);
+  const [fields, appData, orders] = await Promise.all([
+    get_all_fields(instanceId),
+    load_store(instanceId),
+    get_store_orders(instanceId),
+  ]);
 
   if (fields.error) {
     return (
@@ -51,7 +70,7 @@ async function Page(props: any) {
 
   return (
     <>
-      <Dashboard fields={fields} appData={appData} />
+      <Dashboard fields={fields} appData={appData} total_uploads={orders.length} />
     </>
   );
 }

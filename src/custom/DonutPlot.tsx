@@ -1,11 +1,11 @@
 interface Props {
   size?: number;
+  used: number;
+  total: number;
 }
 
 const DonutPlot: React.FC<Props> = (props) => {
-  const { size = 200 } = props;
-  let used = 2800,
-    total = 4000;
+  const { size = 200, used, total } = props;
 
   const percentage = (used * 100) / total;
 
