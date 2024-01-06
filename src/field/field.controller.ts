@@ -34,4 +34,9 @@ export class FieldController {
   delete_field(@Query('fieldId') fieldId: string) {
     return this.fieldService.delete_field(fieldId);
   }
+
+  @Post('duplicate')
+  duplicate_field(@Body() body: { fieldId: string }) {
+    return this.fieldService.duplicate(body.fieldId);
+  }
 }
