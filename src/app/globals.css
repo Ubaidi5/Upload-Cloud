@@ -16,6 +16,7 @@ body {
   max-width: 1100px;
   width: 100%;
   margin: auto;
+  padding-inline: 24px;
 }
 
 h1,
