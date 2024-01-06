@@ -84,7 +84,7 @@ const Create: React.FC<Props> = (props) => {
         body.instanceId = appData.instance.instanceId;
       }
 
-      const { data } = await create_field(body);
+      await create_field(body);
 
       if (editMode) {
         message.success("Field updated successfully.");
