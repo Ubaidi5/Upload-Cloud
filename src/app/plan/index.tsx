@@ -38,10 +38,10 @@ const plans: Array<Plan> = [
     monthly: "3.99",
     yearly: "2.99",
     features: [
-      "Unlimited file uploads",
       "500 uploads linked",
       "Max. 20MB upload file size",
-      "10GB archive space",
+      "10GB storage capacity",
+      "24/7 support",
     ],
     route: (metaSiteId) => {
       top &&
@@ -56,7 +56,7 @@ const plans: Array<Plan> = [
     features: [
       "2,000 uploads linked to orders",
       "Max. 50MB upload file size",
-      "50GB archive space",
+      "100GB storage capacity",
       "24/7 support",
     ],
     route: (metaSiteId) => {
@@ -72,7 +72,7 @@ const plans: Array<Plan> = [
     features: [
       "Unlimited uploads linked to orders",
       "Max. 100MB upload file size",
-      "100GB archive space",
+      "200GB storage capacity",
       "24/7 support",
     ],
     route: (metaSiteId) => {
