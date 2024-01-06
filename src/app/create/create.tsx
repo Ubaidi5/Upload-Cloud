@@ -19,6 +19,7 @@ import { APIS, errorHandler, useAPI } from "@/apis/config";
 import ResourcePicker from "@/components/Modal/ResourcePicker";
 import CancelIcon from "@public/icons/cancel.svg";
 import { useAppData } from "@/context/store";
+import useError from "@/hooks/useError";
 
 interface Props {
   editMode: boolean;
@@ -31,6 +32,7 @@ const Create: React.FC<Props> = (props) => {
 
   const router = useAppRouter();
   const [appData] = useAppData();
+  const [InlineError, setError] = useError();
 
   const [state, setState] = useState<
     Omit<
@@ -72,6 +74,22 @@ const Create: React.FC<Props> = (props) => {
   const [create_field, loading] = useAPI(editMode ? APIS.update_field : APIS.create_field);
 
   async function handleSubmit() {
+    if (state.fieldName === "") {
+      setError({ message: "Field name is required", name: "fieldName" });
+      return;
+    } else if (["products", "collections"].includes(state.targeting) && selectedItems.length === 0) {
+      setError({ message: `Please select ${state.targeting}`, name: "targeting" });
+      return;
+    } else if (state.numberOfFiles === "multiple" && !(state.min || state.max)) {
+      setError({ message: `Please specify minimum and maximum files`, name: "numberOfFiles" });
+      return;
+    } else if (state.dimension !== "") {
+      setError({ message: `Please specify image ${state.dimension}`, name: "dimension" });
+      return;
+    } else {
+      setError({ message: "" });
+    }
+
     try {
       const body: Partial<Field> = {
         ...state,
@@ -145,7 +163,7 @@ const Create: React.FC<Props> = (props) => {
 
       <StyledPage className="py-5">
         <div className="form-section flex flex-col gap-6 flex-1">
-          <section className="card p-4 flex items-end gap-12">
+          <section className="card p-4 flex gap-12">
             <div className="flex-1">
               <p>Field name</p>
               <Input
@@ -153,9 +171,10 @@ const Create: React.FC<Props> = (props) => {
                 value={state.fieldName}
                 onChange={(e) => setState({ ...state, fieldName: e.target.value })}
               />
+              <InlineError name="fieldName" />
             </div>
 
-            <div className="flex items-center mb-2 gap-3">
+            <div className="flex items-center mt-6 gap-3 h-max">
               <span>Upload field required</span>
               <Switch
                 size={20}
@@ -193,6 +212,14 @@ const Create: React.FC<Props> = (props) => {
 
                         return { ...state, targeting: val };
                       });
+
+                      // Remove Inline error if user switch from anyother to All
+                      setError((prev: any) => {
+                        if (prev.name === "targetting") {
+                          return {};
+                        }
+                        return prev;
+                      });
                     }}
                   />
                 </section>
@@ -220,6 +247,7 @@ const Create: React.FC<Props> = (props) => {
                   </Button>
                 </section>
               </div>
+              <InlineError name="targeting" />
 
               {state.targeting === "all" && selectedItems.length ? (
                 <p className="mt-2 mb-1">Your upload field show on all products except:</p>
@@ -453,31 +481,34 @@ const Create: React.FC<Props> = (props) => {
               </section>
 
               {state.numberOfFiles === "multiple" ? (
-                <section className="flex items-center gap-6 flex-1">
-                  <Input
-                    className="flex-1"
-                    label="Minimum files"
-                    placeholder="1"
-                    min={1}
-                    type="number"
-                    value={state.min}
-                    onChange={(e) => {
-                      setState({ ...state, min: e.target.value });
-                    }}
-                  />
+                <div className="flex-1">
+                  <section className="flex items-center gap-6">
+                    <Input
+                      className="flex-1"
+                      label="Minimum files"
+                      placeholder="1"
+                      min={1}
+                      type="number"
+                      value={state.min}
+                      onChange={(e) => {
+                        setState({ ...state, min: e.target.value });
+                      }}
+                    />
 
-                  <Input
-                    className="flex-1"
-                    label="Maximum files"
-                    placeholder="5"
-                    min={1}
-                    type="number"
-                    value={state.max}
-                    onChange={(e) => {
-                      setState({ ...state, max: e.target.value });
-                    }}
-                  />
-                </section>
+                    <Input
+                      className="flex-1"
+                      label="Maximum files"
+                      placeholder="5"
+                      min={1}
+                      type="number"
+                      value={state.max}
+                      onChange={(e) => {
+                        setState({ ...state, max: e.target.value });
+                      }}
+                    />
+                  </section>
+                  <InlineError name="numberOfFiles" />
+                </div>
               ) : null}
             </div>
 
@@ -488,7 +519,7 @@ const Create: React.FC<Props> = (props) => {
                   options={[
                     { label: "Any image dimension", value: "" },
                     { label: "Specific width and height", value: "dimension" },
-                    { label: "Aspect ratio", value: "aspect radio" },
+                    { label: "Aspect ratio", value: "aspect ratio" },
                   ]}
                   value={state.dimension}
                   onChange={(val) => {
@@ -506,7 +537,7 @@ const Create: React.FC<Props> = (props) => {
                       placeholder="Width"
                       value={state.imageWidth}
                       onChange={(e) => {
-                        setState({ ...state, imageHeight: e.target.value });
+                        setState({ ...state, imageWidth: e.target.value });
                       }}
                     />
 
@@ -520,9 +551,10 @@ const Create: React.FC<Props> = (props) => {
                       }}
                     />
                   </div>
-                  <p className="fs-13 mt-1">
+                  {/* <p className="fs-13 mt-1">
                     Add some help text to help the merchant understaing the purpose.
-                  </p>
+                  </p> */}
+                  <InlineError name="dimension" />
                 </section>
               ) : null}
             </div>
@@ -535,7 +567,7 @@ const Create: React.FC<Props> = (props) => {
         <div
           style={{ position: "sticky", top: 24, height: "max-content", width: 300, flexShrink: 0 }}
         >
-          <section className="preview-section">
+          <section className="preview-section" style={{ paddingBottom: 1 }}>
             <h1 className="p-2" style={{ borderBottom: "1px solid #dcdcdc" }}>
               Button Preview
             </h1>
@@ -559,7 +591,7 @@ const Create: React.FC<Props> = (props) => {
                 <p className="help-text">{state.helpText}</p>
               </div>
             </div>
-            <div className="px-3 pb-3">
+            {/* <div className="px-3 pb-3">
               <p>
                 This is how upload field show in your site. It will appear above the Cart button.
                 However you can change its postion by adding a wedgit.
@@ -568,7 +600,7 @@ const Create: React.FC<Props> = (props) => {
               <Button className="mx-auto mt-2" color="#01b6a0" outlined="true">
                 Add widget
               </Button>
-            </div>
+            </div> */}
           </section>
 
           <section className="card mt-6">
