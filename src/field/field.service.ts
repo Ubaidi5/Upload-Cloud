@@ -39,7 +39,9 @@ export class FieldService {
       //   },
       // });
 
-      const fields = await this.db.fields.find({ instanceId: body.instanceId }).lean();
+      const fields = await this.db.fields
+        .find({ instanceId: body.instanceId, enabled: true })
+        .lean();
 
       const currentField = fields.find((field) => {
         if (field.targeting === 'all' && !field.selectedItems.includes(body.productId)) {
@@ -87,7 +89,21 @@ export class FieldService {
     try {
       return this.db.fields.findOneAndUpdate({ _id: fieldId }, { $set: { status: 'inactive' } });
     } catch (err) {
-      throw err;
+      throw new BadRequestException(err);
+    }
+  }
+
+  async duplicate(fieldId: string) {
+    try {
+      const { _id, ...field } = await this.db.fields.findOneAndUpdate({ _id: fieldId }).lean();
+
+      const newField = new this.db.fields(field);
+
+      newField.save();
+
+      return newField;
+    } catch (err) {
+      throw new BadRequestException(err);
     }
   }
 }
