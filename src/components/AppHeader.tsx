@@ -35,11 +35,11 @@ const Header: React.FC = () => {
           </div>
         </AppLink>
 
-        <AppLink href="/settings-wix">
+        {/* <AppLink href="/settings-wix">
           <div className={`header-item ${pathname === "/settings-wix" ? "selected" : ""}`}>
             <p className="header-content">Support</p>
           </div>
-        </AppLink>
+        </AppLink> */}
       </StyeledHeader>
     </>
   );
