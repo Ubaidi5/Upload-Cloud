@@ -22,8 +22,14 @@ export const metadata: Metadata = {
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
+  var Tawk_LoadStart = new Date();
   return (
     <html lang="en">
+      {/* <script
+        src="https://embed.tawk.to/657c174707843602b802495d/1hhmblsbp"
+        async
+        crossOrigin="anonymous"
+      ></script> */}
       <body className={Signika.className}>
         <AppProvider>
           <StyledComponentsRegistry>
