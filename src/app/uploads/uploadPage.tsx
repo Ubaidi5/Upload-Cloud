@@ -86,7 +86,7 @@ const Uploads: React.FC<Props> = (props) => {
               },
             },
             {
-              title: <p className="text-center">Download</p>,
+              title: <p className="text-center">Files</p>,
               data: (order: Order) => {
                 const data: Array<product_options_type> = JSON.parse(order.data);
 
@@ -98,13 +98,13 @@ const Uploads: React.FC<Props> = (props) => {
                 return (
                   <div className="flex items-center justify-center gap-3" style={{ width: "100%" }}>
                     <span>{images.length} Files</span>
-                    <span
+                    {/* <span
                       style={{ backgroundColor: "#193b670d" }}
                       className="rounded py-2 px-3"
                       role="button"
                     >
                       <DownloadIcon style={{ width: 18, color: "#01b6a0" }} />
-                    </span>
+                    </span> */}
                   </div>
                 );
               },
