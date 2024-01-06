@@ -43,7 +43,6 @@ const OrderDetailsModal: React.FC<Props> = (props) => {
       <div>
         {lineItems.map((lineItem, index) => {
           const obj1: any = {}; // this object hold data from line items that comes from the order
-          const obj2: any = {}; // This object hold data from selected variants that comes from the app
 
           lineItem.customTextFields.forEach((ctf) => {
             obj1[ctf.title] = ctf.value;
@@ -53,6 +52,7 @@ const OrderDetailsModal: React.FC<Props> = (props) => {
           });
 
           const currentField = data.find((d) => {
+            const obj2: any = {}; // This object hold data from selected variants that comes from the app
             d.selected_variants.forEach((v) => (obj2[v.title] = v.value));
 
             const isMatched = isEqual(obj1, obj2);
@@ -60,6 +60,7 @@ const OrderDetailsModal: React.FC<Props> = (props) => {
             if (lineItem.name === d.name && isMatched) {
               return true;
             }
+
             return false;
           });
 
