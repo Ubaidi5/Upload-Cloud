@@ -1,6 +1,8 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { IsOptional } from 'class-validator';
 
+type order_status = 'active' | 'deleted';
+
 @Schema({ timestamps: true })
 export class Order {
   @Prop()
@@ -30,6 +32,9 @@ export class Order {
   @IsOptional()
   @Prop()
   buyerInfo: string;
+
+  @Prop({ default: 'active' })
+  status: order_status;
 }
 
 export const OrderSchema = SchemaFactory.createForClass(Order);

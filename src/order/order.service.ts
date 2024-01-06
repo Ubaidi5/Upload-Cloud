@@ -1,5 +1,11 @@
 import { Injectable } from '@nestjs/common';
-import { GetObjectCommand, PutObjectCommand, S3Client } from '@aws-sdk/client-s3';
+import {
+  GetObjectCommand,
+  PutObjectCommand,
+  S3Client,
+  DeleteObjectsCommand,
+  ObjectIdentifier,
+} from '@aws-sdk/client-s3';
 import { ConfigService } from '@nestjs/config';
 import { DBService } from 'src/db/db.service';
 import { CreateOrderDto } from './Order.dto';
@@ -18,7 +24,7 @@ export class OrderService {
   ) {}
 
   async getStoreOrders(instanceId: string) {
-    const orders = this.db.order.find({ instanceId: instanceId });
+    const orders = this.db.order.find({ instanceId: instanceId, status: 'active' });
     return orders;
   }
 
@@ -67,6 +73,33 @@ export class OrderService {
       }),
       cb,
     );
+  }
+
+  async delete_order(orderId: string) {
+    const order = await this.db.order
+      .findOneAndUpdate({ _id: orderId }, { status: 'deleted' })
+      .lean();
+
+    const files: Array<ObjectIdentifier> = [];
+
+    const paresedData: Array<{ images: string[] }> = JSON.parse(order.data);
+
+    paresedData.forEach((data) => {
+      data.images.forEach((imageId) => {
+        files.push({ Key: imageId });
+      });
+    });
+
+    const response = await this.s3Client.send(
+      new DeleteObjectsCommand({
+        Bucket: 'upload-cloud-images',
+        Delete: {
+          Objects: files,
+        },
+      }),
+    );
+
+    return response;
   }
 
   // private public_key = `-----BEGIN PUBLIC KEY-----

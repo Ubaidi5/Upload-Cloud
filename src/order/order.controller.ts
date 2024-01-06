@@ -10,6 +10,8 @@ import {
   Res,
   UploadedFile,
   UseInterceptors,
+  Delete,
+  Param,
 } from '@nestjs/common';
 import { OrderService } from './order.service';
 import { FileInterceptor } from '@nestjs/platform-express';
@@ -61,6 +63,12 @@ export class OrderController {
         res.end(buffer);
       });
     });
+  }
+
+  @Delete(':orderId')
+  delete_order(@Param('orderId') orderId: string) {
+    console.log({ orderId });
+    return this.orderService.delete_order(orderId);
   }
 
   // @Post('webhook')
