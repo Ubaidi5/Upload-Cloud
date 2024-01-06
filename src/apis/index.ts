@@ -46,6 +46,9 @@ const APIS = {
 
     return fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/order/image`, requestOptions);
   },
+  delete_order: (orderId: string) => {
+    return baseURL.delete(`order/${orderId}`);
+  },
 };
 
 export default APIS;

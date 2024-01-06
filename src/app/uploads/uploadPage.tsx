@@ -3,10 +3,11 @@ import Table from "@/custom/Table";
 import DownloadIcon from "@public/icons/download.svg";
 import TrashIcon from "@public/icons/trash.svg";
 import EyeIcon from "@public/icons/eye-filled.svg";
-import { Modal, Button } from "@/custom";
+import { Modal, Button, message } from "@/custom";
 import { MutableRefObject, useRef, useState } from "react";
 import { dateFormatter } from "@/helper/dateFormatter";
 import OrderDetailsModal from "@/components/Modal/OrderDetailModal";
+import { APIS, errorHandler, useAPI } from "@/apis/config";
 
 interface Props {
   orders: Array<Order>;
@@ -17,8 +18,24 @@ const Uploads: React.FC<Props> = (props) => {
   console.log(props);
 
   const orderRef = useRef() as MutableRefObject<Order>;
+
+  const [allOrders, setAllOrders] = useState(orders);
   const [deleteModal, toggleDeleteModal] = useState(false);
   const [orderDetailModal, toggleDetailModal] = useState(false);
+
+  const [delete_order, loading] = useAPI(APIS.delete_order);
+
+  async function handleDelete() {
+    try {
+      await delete_order(orderRef.current._id);
+      const index = allOrders.findIndex((o) => o._id === orderRef.current._id);
+      index >= 0 && allOrders.splice(index, 1);
+      setAllOrders([...allOrders]);
+      toggleDeleteModal(false);
+    } catch (err) {
+      message.error(errorHandler(err));
+    }
+  }
 
   return (
     <>
@@ -33,7 +50,9 @@ const Uploads: React.FC<Props> = (props) => {
 
         <div className="flex items-center justify-center gap-12">
           <Button onClick={() => toggleDeleteModal(false)}>Cancel</Button>
-          <Button bgcolor="#f95f53">Delete</Button>
+          <Button bgcolor="#f95f53" onClick={handleDelete} loading={loading}>
+            Delete
+          </Button>
         </div>
       </Modal>
 
@@ -52,7 +71,7 @@ const Uploads: React.FC<Props> = (props) => {
           Refresh files
         </Button> */}
         <Table
-          data={orders}
+          data={allOrders}
           columns={[
             {
               title: "Order",
