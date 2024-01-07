@@ -77,6 +77,10 @@ const Dashboard: React.FC<Props> = (props) => {
      */
     if (appData.store) {
       localStorage.setItem("__UC_refresh_token", `${appData.store.refreshToken}`);
+
+      APIS.embed_script(appData.store).catch((err) => {
+        message.error("Script is not embeded in store front");
+      });
     }
   }, [appData.store]);
 

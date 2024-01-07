@@ -12,8 +12,11 @@ const APIS = {
   load_store: (params: any) => {
     return baseURL.get("/store/load", { params });
   },
-  embed_script: (body: any, headers: any) => {
-    return baseURL.post("/store/embed_script", body, { headers });
+  embed_script: (body: any) => {
+    const headers = {
+      Authorization: body.refreshToken,
+    };
+    return baseURL.post("/store/embed_script", { instanceId: body.instanceId }, { headers });
   },
   get_fields: (params: any) => {
     return baseURL.get("/field", { params });
