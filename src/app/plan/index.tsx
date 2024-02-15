@@ -12,7 +12,7 @@ type Plan = {
   yearly: string;
   monthly: string;
   features: Array<string>;
-  route: (metaSideId: string) => void;
+  route: (metaSideId: string, cycle: "MONTH" | "YEAR") => void;
 };
 
 const plans: Array<Plan> = [
@@ -29,7 +29,7 @@ const plans: Array<Plan> = [
     ],
     route: (metaSiteId) => {
       top &&
-        (top.window.location.href = `https://manage.wix.com/upgrade/app/${process.env.NEXT_PUBLIC_APP_ID}/plan/00d6a9b1-c8e1-4a29-a574-6290762688d4/payment-cycle?meta-site-id=${metaSiteId}`);
+        (top.window.location.href = `https://manage.wix.com/app-pricing-plans/${process.env.NEXT_PUBLIC_APP_ID}/plan?meta-site-id=${metaSiteId}`);
     },
   },
   {
@@ -43,9 +43,9 @@ const plans: Array<Plan> = [
       "10GB storage capacity",
       "24/7 support",
     ],
-    route: (metaSiteId) => {
+    route: (metaSiteId, cycle) => {
       top &&
-        (top.window.location.href = `https://manage.wix.com/upgrade/app/${process.env.NEXT_PUBLIC_APP_ID}/plan/51caf23e-220e-43b3-829d-924ad4e4a6dd/payment-cycle?meta-site-id=${metaSiteId}`);
+        (top.window.location.href = `https://manage.wix.com/app-pricing-plans/${process.env.NEXT_PUBLIC_APP_ID}/plan/f3fe185c-7cb6-4579-b7c2-640bb8f3ac2d/payment-cycle/${cycle}/order-checkout?meta-site-id=${metaSiteId}`);
     },
   },
   {
@@ -59,9 +59,9 @@ const plans: Array<Plan> = [
       "100GB storage capacity",
       "24/7 support",
     ],
-    route: (metaSiteId) => {
+    route: (metaSiteId, cycle) => {
       top &&
-        (top.window.location.href = `https://manage.wix.com/upgrade/app/${process.env.NEXT_PUBLIC_APP_ID}/plan/51caf23e-220e-43b3-829d-924ad4e4a6dd/payment-cycle?meta-site-id=${metaSiteId}`);
+        (top.window.location.href = `https://manage.wix.com/app-pricing-plans/${process.env.NEXT_PUBLIC_APP_ID}/plan/eee8ab31-3e0f-4e22-9989-5141c49cf3e2/payment-cycle/${cycle}/order-checkout?meta-site-id=${metaSiteId}`);
     },
   },
   {
@@ -75,16 +75,16 @@ const plans: Array<Plan> = [
       "200GB storage capacity",
       "24/7 support",
     ],
-    route: (metaSiteId) => {
+    route: (metaSiteId, cycle) => {
       top &&
-        (top.window.location.href = `https://manage.wix.com/upgrade/app/${process.env.NEXT_PUBLIC_APP_ID}/plan/51caf23e-220e-43b3-829d-924ad4e4a6dd/payment-cycle?meta-site-id=${metaSiteId}`);
+        (top.window.location.href = `https://manage.wix.com/app-pricing-plans/${process.env.NEXT_PUBLIC_APP_ID}/plan/c48d00f3-bd48-4adf-9037-7cca6b32af3e/payment-cycle/${cycle}/order-checkout?meta-site-id=${metaSiteId}`);
     },
   },
 ];
 
 const PlanPage: React.FC = () => {
   const [appData] = useAppData();
-  const [segment, setSegment] = useState("monthly");
+  const [segment, setSegment] = useState("yearly");
 
   const current_plan = (appData.instance.billing?.packageName || "basic") as plan_types;
 
@@ -139,8 +139,8 @@ const PlanPage: React.FC = () => {
             value={segment}
             onChange={setSegment}
             options={[
-              { label: "Monthly", value: "monthly" },
               { label: "Yearly", value: "yearly" },
+              { label: "Monthly", value: "monthly" },
             ]}
           />
         )}
@@ -193,7 +193,11 @@ const PlanPage: React.FC = () => {
                     <Button
                       className="mt-5 mb-3 mx-auto px-5"
                       onClick={() => {
-                        appData.site.siteId && plan.route(appData.site.siteId);
+                        if (getButtonText(plan) === "Active") {
+                          return;
+                        }
+                        appData.site.siteId &&
+                          plan.route(appData.site.siteId, segment === "monthly" ? "MONTH" : "YEAR");
                       }}
                       style={{ width: "max-content" }}
                       bgcolor={getButtonText(plan) === "Active" ? "#01b6a0" : undefined}

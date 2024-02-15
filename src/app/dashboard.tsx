@@ -17,7 +17,7 @@ interface Props {
 
 const Dashboard: React.FC<Props> = (props) => {
   const { fields, appData, total_uploads } = props;
-  console.log(appData);
+  // console.log(appData);
 
   const [_, setAppData] = useAppData(); // Setting app data on context
 
@@ -144,9 +144,11 @@ const Dashboard: React.FC<Props> = (props) => {
               <h3 className="fs-28 fw-600" style={{ lineHeight: "28px", color: "#01b6a0" }}>
                 <span className="capitalize">{plan?.name}</span> <span>plan</span>
               </h3>
-              <Button className="mt-auto" outlined="true" color="#9F9FA5">
-                Upgrade
-              </Button>
+              <AppLink href="/plan" className="mt-3">
+                <Button className="mt-auto" outlined="true" color="#9F9FA5">
+                  Upgrade
+                </Button>
+              </AppLink>
             </div>
 
             <div>
