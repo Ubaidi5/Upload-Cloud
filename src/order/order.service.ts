@@ -36,13 +36,13 @@ export class OrderService {
 
     const access_token = await this.storeService.get_access_token(store.refreshToken);
 
-    const { data } = await axios.get(`https://www.wixapis.com/stores/v2/orders/${body.orderId}`, {
+    const { data } = await axios.get(`https://www.wixapis.com/ecom/v1/orders/${body.orderId}`, {
       headers: {
         Authorization: access_token,
       },
     });
 
-    console.log(data);
+    // console.log(data);
 
     order.orderNumber = data.order.number;
     order.lineItems = JSON.stringify(data.order.lineItems);
