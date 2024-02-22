@@ -17,8 +17,12 @@ const Signika = Signika_Negative({
 });
 
 export const metadata: Metadata = {
-  title: "Photo Comet",
+  title: "Upload Cloud",
   description: "Upload Image & Customize Order with Comet Base",
+  icons: {
+    href: "/images/fav-icon.svg",
+    icon: "ico",
+  },
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
