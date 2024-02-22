@@ -107,31 +107,44 @@ interface BuyerInfo {
 }
 
 interface LineItem {
-  index: number;
+  id: string;
+  productName: {
+    original: string;
+    translated: string;
+  };
+  catalogReference: {
+    catalogItemId: string;
+    appId: string;
+    options: {
+      options: { [key: string]: string };
+      customTextFields: { [key: string]: string };
+      variantId: string;
+    };
+  };
   quantity: number;
-  price: string;
-  name: string;
-  translatedName: string;
-  productId: string;
-  totalPrice: string;
-  lineItemType: string;
-  options: Array<{ option: string; selection: string }>;
-  customTextFields: Array<{ title: string; value: string }>;
-  mediaItem: {
-    mediaType: string;
-    url: string;
-    width: number;
-    height: number;
-    mediaId: string;
-    id: string;
+  totalDiscount: { amount: string; formattedAmount: string };
+  descriptionLines: Array<{
+    name: { original: string; translated: string };
+    colorInfo: { original: string; translated: string; code: string };
+    plainText: { original: string; translated: string };
+    plainTextValue: { original: string; translated: string };
+    lineType: "COLOR" | "PLAIN_TEXT";
+    color: string;
+  }>;
+  image: { id: string; url: string; height: number; width: number };
+  physicalProperties: { sku: string; shippable: boolean };
+  itemType: { preset: "PHYSICAL" };
+  price: { amount: string; formattedAmount: string };
+  priceBeforeDiscounts: { amount: string; formattedAmount: string };
+  totalPriceBeforeTax: { amount: string; formattedAmount: string };
+  totalPriceAfterTax: { amount: string; formattedAmount: string };
+  paymentOption: "FULL_PAYMENT_ONLINE";
+  taxDetails: {
+    taxableAmount: { amount: string; formattedAmount: string };
+    taxRate: string;
+    totalTax: { amount: string; formattedAmount: string };
   };
-  sku: string;
-  variantId: string;
-  tax: string;
-  taxIncludedInPrice: boolean;
-  priceData: {
-    taxIncludedInPrice: boolean;
-    price: string;
-    totalPrice: string;
-  };
+  locations: Array<any>;
+  lineItemPrice: { amount: string; formattedAmount: string };
+  customLineItem: boolean;
 }

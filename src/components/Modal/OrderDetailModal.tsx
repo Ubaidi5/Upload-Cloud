@@ -42,14 +42,10 @@ const OrderDetailsModal: React.FC<Props> = (props) => {
 
       <div>
         {lineItems.map((lineItem, index) => {
-          const obj1: any = {}; // this object hold data from line items that comes from the order
-
-          lineItem.customTextFields.forEach((ctf) => {
-            obj1[ctf.title] = ctf.value;
-          });
-          lineItem.options.forEach((opt) => {
-            obj1[opt.option] = opt.selection;
-          });
+          const obj1: any = {
+            ...lineItem.catalogReference?.options.options,
+            ...lineItem.catalogReference?.options.customTextFields,
+          }; // this object hold data from line items that comes from the wix order API
 
           const currentField = data.find((d) => {
             const obj2: any = {}; // This object hold data from selected variants that comes from the app
@@ -57,7 +53,7 @@ const OrderDetailsModal: React.FC<Props> = (props) => {
 
             const isMatched = isEqual(obj1, obj2);
 
-            if (lineItem.name === d.name && isMatched) {
+            if (lineItem.productName.original === d.name && isMatched) {
               return true;
             }
 
@@ -67,9 +63,9 @@ const OrderDetailsModal: React.FC<Props> = (props) => {
           return (
             <div key={index} className="line-item flex">
               <section className="flex items-center gap-2 flex-1">
-                <img className="product-image" src={lineItem.mediaItem.url} />
+                <img className="product-image" src={lineItem.image.url} />
                 <div>
-                  <p className="fs-14 fw-600">{lineItem.name}</p>
+                  <p className="fs-14 fw-600">{lineItem.productName.original}</p>
                   <p className="fc-dimm fs-13">Quantity {lineItem.quantity}</p>
                 </div>
               </section>
