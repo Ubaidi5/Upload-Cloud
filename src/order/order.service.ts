@@ -46,7 +46,8 @@ export class OrderService {
 
     order.orderNumber = data.order.number;
     order.lineItems = JSON.stringify(data.order.lineItems);
-    order.buyerInfo = JSON.stringify(data.order.buyerInfo);
+    const contactDetails = data.order?.billingInfo?.contactDetails || {};
+    order.buyerInfo = JSON.stringify({ ...data.order.buyerInfo, ...contactDetails });
 
     await order.save();
 
