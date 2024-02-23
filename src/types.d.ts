@@ -97,13 +97,12 @@ interface product_options_type {
 }
 
 interface BuyerInfo {
-  id: string;
-  type: string;
-  identityType: string;
+  contactId: string;
+  visitorId: string;
+  email: string;
   firstName: string;
   lastName: string;
   phone: string;
-  email: string;
 }
 
 interface LineItem {

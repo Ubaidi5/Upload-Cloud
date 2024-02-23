@@ -18,7 +18,7 @@ const OrderDetailsModal: React.FC<Props> = (props) => {
   const buyerInfo: BuyerInfo = JSON.parse(order.buyerInfo);
 
   return (
-    <StyledModal open={open} onCancel={onCancel}>
+    <StyledModal open={open} onCancel={onCancel} style={{ width: 900 }}>
       <div className="flex justify-between">
         <section>
           <h1 className="fc-light fs-24">Order #{order.orderNumber}</h1>
@@ -42,7 +42,7 @@ const OrderDetailsModal: React.FC<Props> = (props) => {
 
       <div>
         {lineItems.map((lineItem, index) => {
-          const obj1: any = {
+          const obj1: { [key: string]: any } = {
             ...lineItem.catalogReference?.options.options,
             ...lineItem.catalogReference?.options.customTextFields,
           }; // this object hold data from line items that comes from the wix order API
@@ -67,6 +67,11 @@ const OrderDetailsModal: React.FC<Props> = (props) => {
                 <div>
                   <p className="fs-14 fw-600">{lineItem.productName.original}</p>
                   <p className="fc-dimm fs-13">Quantity {lineItem.quantity}</p>
+                  {Object.entries(obj1).map(([key, value]) => (
+                    <p className="fc-dimm fs-13">
+                      {key}: {value}
+                    </p>
+                  ))}
                 </div>
               </section>
 
@@ -82,7 +87,7 @@ const OrderDetailsModal: React.FC<Props> = (props) => {
       </div>
 
       <Button
-        style={{ marginInline: "auto", width: 150, marginTop: 16, height: 60 }}
+        style={{ marginInline: "auto", width: 150, marginTop: 16, height: 40 }}
         onClick={onCancel}
       >
         Close
