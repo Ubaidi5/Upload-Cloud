@@ -13,10 +13,11 @@ interface Props {
   fields: Array<Field>;
   appData: AppData;
   total_uploads: number;
+  locale?: string;
 }
 
 const Dashboard: React.FC<Props> = (props) => {
-  const { fields, appData, total_uploads } = props;
+  const { fields, appData, total_uploads, locale = "en" } = props;
   // console.log(appData);
 
   const [_, setAppData] = useAppData(); // Setting app data on context
@@ -98,7 +99,7 @@ const Dashboard: React.FC<Props> = (props) => {
     pinnacle: {
       tier: 3,
       name: "Pinnacle",
-      uploads: "2,000",
+      uploads: "2000",
     },
     infinite: {
       tier: 4,
@@ -106,6 +107,10 @@ const Dashboard: React.FC<Props> = (props) => {
       uploads: Infinity,
     },
   }[appData.instance.billing?.packageName || "basic"];
+
+  function numberFormat(num: number) {
+    return new Intl.NumberFormat(locale).format(num);
+  }
 
   return (
     <>
@@ -131,7 +136,7 @@ const Dashboard: React.FC<Props> = (props) => {
               <div>
                 <p className="fc-dimm fs-13 mb-2">Remaining Uploads</p>
                 <h3 className="fs-28 fw-600" style={{ lineHeight: "28px", color: "#01b6a0" }}>
-                  {Number(plan?.uploads) - total_uploads}
+                  {numberFormat(Number(plan?.uploads) - total_uploads)}
                 </h3>
               </div>
             </div>

@@ -52,6 +52,7 @@ async function get_store_orders(instanceId: string) {
 
 async function Page(props: any) {
   const instanceId = getInstanceId(props.searchParams.instance);
+  const locale = props.searchParams.locale || "en";
 
   const [fields, appData, orders] = await Promise.all([
     get_all_fields(instanceId),
@@ -70,7 +71,7 @@ async function Page(props: any) {
 
   return (
     <>
-      <Dashboard fields={fields} appData={appData} total_uploads={orders.length} />
+      <Dashboard fields={fields} appData={appData} total_uploads={orders.length} locale={locale} />
     </>
   );
 }
