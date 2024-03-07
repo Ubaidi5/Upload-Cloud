@@ -3,9 +3,11 @@ import styled from "styled-components";
 import { AppLink } from "@/custom";
 import { usePathname } from "next/navigation";
 import AppIcon from "@public/images/fav-icon.svg";
+import { useAppData } from "@/context/store";
 
 const Header: React.FC = () => {
   const pathname = usePathname();
+  const [appData] = useAppData();
 
   return (
     <>
@@ -29,11 +31,13 @@ const Header: React.FC = () => {
           </div>
         </AppLink>
 
-        <AppLink href="/plan">
-          <div className={`header-item ${pathname === "/plan" ? "selected" : ""}`}>
-            <p className="header-content">Plan</p>
-          </div>
-        </AppLink>
+        <a
+          href={`https://manage.wix.com/app-pricing-plans/${process.env.NEXT_PUBLIC_APP_ID}/plan?meta-site-id=${appData.site.siteId}`}
+          target="_top"
+          className={`header-item ${pathname === "/plan" ? "selected" : ""}`}
+        >
+          <p className="header-content">Plan</p>
+        </a>
 
         {/* <AppLink href="/settings-wix">
           <div className={`header-item ${pathname === "/settings-wix" ? "selected" : ""}`}>
@@ -60,6 +64,7 @@ const StyeledHeader = styled("header")`
     color: #6d7175;
     margin: 0 4px;
     cursor: pointer;
+    font-weight: 500;
   }
 
   .header-item.selected {
