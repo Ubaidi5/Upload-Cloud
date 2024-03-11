@@ -149,11 +149,15 @@ const Dashboard: React.FC<Props> = (props) => {
               <h3 className="fs-28 fw-600" style={{ lineHeight: "28px", color: "#01b6a0" }}>
                 <span className="capitalize">{plan?.name}</span> <span>plan</span>
               </h3>
-              <AppLink href="/plan" className="mt-3">
+              <a
+                href={`https://manage.wix.com/app-pricing-plans/${process.env.NEXT_PUBLIC_APP_ID}/plan?meta-site-id=${appData.site.siteId}`}
+                target="_top"
+                className="mt-3"
+              >
                 <Button className="mt-auto" outlined="true" color="#9F9FA5">
                   Upgrade
                 </Button>
-              </AppLink>
+              </a>
             </div>
 
             <div>
