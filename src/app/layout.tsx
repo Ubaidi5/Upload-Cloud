@@ -6,6 +6,7 @@ import StyledComponentsRegistry from "./registry";
 import { Signika_Negative } from "next/font/google";
 import AppHeader from "@/components/AppHeader";
 import AppProvider from "@/context/store";
+import Script from "next/script";
 
 const Signika = Signika_Negative({
   weight: ["400", "500", "600", "700"],
@@ -26,14 +27,14 @@ export const metadata: Metadata = {
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
-  var Tawk_LoadStart = new Date();
   return (
     <html lang="en">
-      {/* <script
-        src="https://embed.tawk.to/657c174707843602b802495d/1hhmblsbp"
-        async
+      <Script
+        charSet="UTF-8"
         crossOrigin="anonymous"
-      ></script> */}
+        src="https://embed.tawk.to/657c174707843602b802495d/1hhmblsbp"
+        strategy="afterInteractive"
+      />
       <body className={Signika.className}>
         <AppProvider>
           <StyledComponentsRegistry>
