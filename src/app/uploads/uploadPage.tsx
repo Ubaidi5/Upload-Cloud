@@ -1,27 +1,28 @@
 "use client";
 import Table from "@/custom/Table";
-import DownloadIcon from "@public/icons/download.svg";
+// import DownloadIcon from "@public/icons/download.svg";
 import TrashIcon from "@public/icons/trash.svg";
 import EyeIcon from "@public/icons/eye-filled.svg";
 import { Modal, Button, message } from "@/custom";
-import { MutableRefObject, useRef, useState } from "react";
+import { MutableRefObject, useEffect, useRef, useState } from "react";
 import { dateFormatter } from "@/helper/dateFormatter";
 import OrderDetailsModal from "@/components/Modal/OrderDetailModal";
 import { APIS, errorHandler, useAPI } from "@/apis/config";
 
 interface Props {
-  orders: Array<Order>;
+  instanceId: string;
+  orders?: Array<Order>;
 }
 
 const Uploads: React.FC<Props> = (props) => {
-  const { orders } = props;
-  console.log(props);
+  const { instanceId } = props;
 
   const orderRef = useRef() as MutableRefObject<Order>;
 
-  const [allOrders, setAllOrders] = useState(orders);
+  const [allOrders, setAllOrders] = useState<Array<Order>>([]);
   const [deleteModal, toggleDeleteModal] = useState(false);
   const [orderDetailModal, toggleDetailModal] = useState(false);
+  const [order_loading, toggleLoading] = useState(true);
 
   const [delete_order, loading] = useAPI(APIS.delete_order);
 
@@ -36,6 +37,31 @@ const Uploads: React.FC<Props> = (props) => {
       message.error(errorHandler(err));
     }
   }
+
+  async function get_store_orders(instanceId: string) {
+    try {
+      toggleLoading(true);
+      const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/order`, {
+        method: "GET",
+        headers: { "X-InstanceId": instanceId },
+        cache: "no-store",
+      });
+
+      const data = await response.json();
+
+      setAllOrders(data);
+    } catch (err) {
+      message.error(errorHandler(err));
+    } finally {
+      toggleLoading(false);
+    }
+  }
+
+  useEffect(() => {
+    if (instanceId) {
+      get_store_orders(instanceId);
+    }
+  }, [instanceId]);
 
   return (
     <>
@@ -67,10 +93,11 @@ const Uploads: React.FC<Props> = (props) => {
       ) : null}
 
       <div className="py-8">
-        {/* <Button bgcolor="#1e1e2c" className="my-5">
+        <Button bgcolor="#1e1e2c" className="my-5" onClick={() => get_store_orders(instanceId)}>
           Refresh files
-        </Button> */}
+        </Button>
         <Table
+          loading={order_loading}
           data={allOrders}
           columns={[
             {

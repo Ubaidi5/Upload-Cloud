@@ -86,7 +86,9 @@ const Table: React.FC<Props> = (props) => {
                 }}
               >
                 <LoadingOutlined style={{ width: 36, color: "#458FFF" }} className="rotate" />
-                <p className="mt-2 font-500 text-[#458FFF]">Loading...</p>
+                <p className="mt-2 font-500" style={{ fontSize: 16 }}>
+                  Loading
+                </p>
               </div>
             ) : null}
 
