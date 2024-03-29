@@ -1,8 +1,15 @@
-import { Button, Modal } from "@/custom";
+import { Button, Modal, message } from "@/custom";
 import { dateFormatter } from "@/helper/dateFormatter";
 import { isEqual } from "@/helper/isEqual";
 import styled from "styled-components";
-import UCImage from "../UCImage";
+// import UCImage from "../UCImage";
+import { useState } from "react";
+import { APIS, errorHandler, useAPI } from "@/apis/config";
+/**
+ * Icons
+ */
+import DownloadIcon from "@public/icons/download.svg";
+import LoadingOutlined from "@public/icons/loading.svg";
 
 interface Props {
   open: boolean;
@@ -12,6 +19,29 @@ interface Props {
 
 const OrderDetailsModal: React.FC<Props> = (props) => {
   const { open, onCancel, order } = props;
+
+  const [loadingIds, setLoadingIds] = useState<Array<string>>([]);
+
+  async function downloadImage(imageId: string) {
+    try {
+      const response = await APIS.get_image({ fileName: imageId });
+      const result = await response.blob();
+      const url = URL.createObjectURL(result);
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = `order#${order.orderNumber}__${imageId}`;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    } catch (err) {
+      console.log(err);
+      message.error(errorHandler(err));
+    } finally {
+      const index = loadingIds.indexOf(imageId);
+      loadingIds.splice(index, 1);
+      setLoadingIds([...loadingIds]);
+    }
+  }
 
   const lineItems: Array<LineItem> = JSON.parse(order.lineItems);
   const data: Array<product_options_type> = JSON.parse(order.data);
@@ -78,7 +108,22 @@ const OrderDetailsModal: React.FC<Props> = (props) => {
               <section className="flex-1 flex gap-4">
                 {currentField &&
                   currentField.images.map((imageId) => (
-                    <UCImage key={imageId} imageId={imageId} orderNumber={order.orderNumber} />
+                    <div
+                      style={{ width: 48, height: 48 }}
+                      className="flex items-center justify-center rounded bg-[#6338FA] cursor-pointer"
+                      onClick={() => {
+                        loadingIds.push(imageId);
+                        setLoadingIds([...loadingIds]);
+                        downloadImage(imageId);
+                      }}
+                    >
+                      {loadingIds.includes(imageId) ? (
+                        <LoadingOutlined style={{ width: 24, color: "#fff" }} className="rotate" />
+                      ) : (
+                        <DownloadIcon style={{ width: 24, height: 24, color: "#fff" }} />
+                      )}
+                    </div>
+                    // <UCImage key={imageId} imageId={imageId} orderNumber={order.orderNumber} />
                   ))}
               </section>
             </div>
