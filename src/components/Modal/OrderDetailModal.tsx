@@ -22,14 +22,15 @@ const OrderDetailsModal: React.FC<Props> = (props) => {
 
   const [loadingIds, setLoadingIds] = useState<Array<string>>([]);
 
-  async function downloadImage(imageId: string) {
+  async function downloadImage(imageId: string, product_name: string, imageNumber: number) {
     try {
       const response = await APIS.get_image({ fileName: imageId });
       const result = await response.blob();
       const url = URL.createObjectURL(result);
       const link = document.createElement("a");
       link.href = url;
-      link.download = `order#${order.orderNumber}__${imageId}`;
+      const extension = imageId.split(".")[1] || "png";
+      link.download = `order#${order.orderNumber}__${product_name}_image#${imageNumber}.${extension}`;
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
@@ -67,7 +68,10 @@ const OrderDetailsModal: React.FC<Props> = (props) => {
 
       <div className="header flex my-2">
         <p className="flex-1">Product Name</p>
-        <p className="flex-1">Images</p>
+        <p className="flex-1">
+          <span>Images </span>
+          <span className="fs-11">(Click on download button to get the image)</span>
+        </p>
       </div>
 
       <div>
@@ -114,7 +118,7 @@ const OrderDetailsModal: React.FC<Props> = (props) => {
                       onClick={() => {
                         loadingIds.push(imageId);
                         setLoadingIds([...loadingIds]);
-                        downloadImage(imageId);
+                        downloadImage(imageId, lineItem.productName.original, index + 1);
                       }}
                     >
                       {loadingIds.includes(imageId) ? (
